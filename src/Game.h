@@ -1,8 +1,10 @@
 
-#ifndef PLATFORMER_GAME_H
-#define PLATFORMER_GAME_H
+#ifndef CRITTERCROSSING_GAME_H
+#define CRITTERCROSSING_GAME_H
 
 #include <SFML/Graphics.hpp>
+
+#include "CharacterCreator/CharacterCreator.h"
 
 class Game
 {
@@ -20,6 +22,8 @@ class Game
   sf::Sprite ball;
   sf::Texture ball_texture;
 
+  CharacterCreator characterCreator;
+
 };
 
-#endif // PLATFORMER_GAME_H
+#endif // CRITTERCROSSING_GAME_H

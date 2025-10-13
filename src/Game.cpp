@@ -11,10 +11,13 @@ Game::Game(sf::RenderWindow& game_window)
 Game::~Game()
 {
 
+
 }
 
 bool Game::init()
 {
+
+  characterCreator.LoadCharacterTextures();
 
   return true;
 }
