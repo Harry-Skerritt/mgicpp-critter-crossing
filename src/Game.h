@@ -19,10 +19,14 @@ class Game
 
  private:
   sf::RenderWindow& window;
-  sf::Sprite ball;
-  sf::Texture ball_texture;
+  sf::Sprite body;
+  sf::Sprite eyes;
+  sf::Sprite glasses;
+  sf::Sprite hat;
 
   CharacterCreator characterCreator;
+
+
 
 };
 
