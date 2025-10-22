@@ -17,9 +17,8 @@ struct TextureEntry {
   bool canBeColoured;
 };
 
-struct TextureComponent {
+struct TextureProperties {
   std::shared_ptr<sf::Texture> texture;
-  CreatureType creatureType;
   bool canBeColored;
 };
 
@@ -31,13 +30,13 @@ public:
   ~CharacterCreator();
 
   void LoadCharacterTextures();
-  std::array<sf::Texture*, 4> ChooseCharacter();
+  std::array<TextureProperties, 4> ChooseCharacter();
   CreatureType getCreatureType();
 
 
 private:
   bool AddTexture(TextureType type, std::string fileLoc, float probability, bool canBeColoured = false, CreatureType creature = CreatureType::NONE);
-  sf::Texture* GetRandomTexture(TextureType type);
+  TextureProperties GetRandomTexture(TextureType type);
 
   // Helpers for counts
   int GetTextureCount(TextureType type);

@@ -22,19 +22,19 @@ public:
     Character(const sf::Vector2f& position, const sf::Vector2f& size);
     ~Character();
 
-    void loadCharacter(std::array<sf::Texture*, 4> texture, CreatureType type);
+    void loadCharacter(std::array<TextureProperties, 4> texture, CreatureType type);
     void draw(sf::RenderWindow& window);
-    void drawBoundingBoxes(sf::RenderWindow &window);
 
     void setViewCentre(const sf::Vector2f& centre);
 
 
 private:
     void setScaleAndOrigin(sf::Sprite* sprite);
-
+    static sf::Color getRandomColour();
     // Debug
     // Todo: Remove before building
     std::string creatureTypeToString(CreatureType type);
+    void drawBoundingBoxes(sf::RenderWindow &window);
 
 // Vars
 public:
@@ -50,10 +50,10 @@ private:
     bool character_loaded = false;
 
     // Character Textures
-    sf::Texture* body_texture = nullptr;
-    sf::Texture* eye_texture = nullptr;
-    sf::Texture* glasses_texture = nullptr;
-    sf::Texture* hat_texture = nullptr;
+    std::shared_ptr<sf::Texture> body_texture = nullptr;
+    std::shared_ptr<sf::Texture>  eye_texture = nullptr;
+    std::shared_ptr<sf::Texture>  glasses_texture = nullptr;
+    std::shared_ptr<sf::Texture>  hat_texture = nullptr;
 
     // Character Sprites
     sf::Sprite body_sprite;

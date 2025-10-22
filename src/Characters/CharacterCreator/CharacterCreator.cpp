@@ -1,14 +1,8 @@
 #include "CharacterCreator.h"
 
-CharacterCreator::CharacterCreator() {
+CharacterCreator::CharacterCreator() { }
 
-}
-
-CharacterCreator::~CharacterCreator() {
-
-}
-
-
+CharacterCreator::~CharacterCreator() = default;
 
 void CharacterCreator::LoadCharacterTextures() {
 
@@ -53,8 +47,8 @@ void CharacterCreator::LoadCharacterTextures() {
 
 }
 
-std::array<sf::Texture*, 4> CharacterCreator::ChooseCharacter() {
-    std::array<sf::Texture*, 4> textures{};
+std::array<TextureProperties, 4> CharacterCreator::ChooseCharacter() {
+    std::array<TextureProperties, 4> textures{};
 
     textures[0] = GetRandomTexture(TextureType::BODY);
     textures[1] = GetRandomTexture(TextureType::EYES);
@@ -68,9 +62,7 @@ CreatureType CharacterCreator::getCreatureType() {
     return last_creature_type;
 }
 
-
-
-
+// --- PRIVATE ---
 bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, bool canBeColoured, CreatureType creature) {
 
     std::shared_ptr<sf::Texture> temp_texture = std::make_shared<sf::Texture>() ;
@@ -90,13 +82,13 @@ bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float w
     return true;
 }
 
-
-sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
+TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 {
+    TextureProperties properties{};
     const std::vector<TextureEntry>& entries = textures[type];
     if (entries.empty()) {
         std::cout << "No textures available" << std::endl;
-        return nullptr;
+        return properties;
     }
 
     int count = texture_count[type];
@@ -110,7 +102,7 @@ sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
     // Check the weight isn't 0
     if (total_weight <= 0.0f) {
         std::cout << "Total weight is 0.0" << std::endl;
-        return nullptr;
+        return properties;
     }
 
     const TextureEntry* chosen = nullptr;
@@ -146,7 +138,9 @@ sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
         last_creature_type = chosen->creatureType;
     }
 
-    return chosen->texture.get();
+    properties.texture = chosen->texture;
+    properties.canBeColored = chosen->canBeColoured;
+    return properties;
 }
 
 

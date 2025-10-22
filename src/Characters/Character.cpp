@@ -17,20 +17,18 @@ Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
 
 Character::~Character() = default;
 
-void Character::loadCharacter(std::array<sf::Texture*, 4> textures, CreatureType type) {
+void Character::loadCharacter(std::array<TextureProperties, 4> textures, CreatureType type) {
     character_loaded = false;
 
     // Load textures from array
-    body_texture = textures[0];
-    eye_texture = textures[1];
-    glasses_texture = textures[2];
-    hat_texture = textures[3];
+    body_texture = textures[0].texture;
+    eye_texture = textures[1].texture;
+    glasses_texture = textures[2].texture;
+    hat_texture = textures[3].texture;
 
     if (body_texture == nullptr || eye_texture == nullptr || glasses_texture == nullptr || hat_texture == nullptr) {
         return;
     }
-
-    std::cout << "Current CreatureType: " << creatureTypeToString(type) << std::endl;
 
     // Set Body
     body_sprite.setTexture(*body_texture);
@@ -40,19 +38,28 @@ void Character::loadCharacter(std::array<sf::Texture*, 4> textures, CreatureType
     sf::Vector2f body_pos = body_base_pos + body_offset;
     body_sprite.setPosition(body_pos);
 
+    // Set Eyes
     eye_sprite.setTexture(*eye_texture);
     setScaleAndOrigin(&eye_sprite);
     sf::Vector2f eye_offset = (SPRITE_OFFSETS.at(type).eyes_offset) * eye_sprite.getScale().x;
     eye_sprite.setPosition(body_pos + eye_offset);
 
+    // Set Glasses
     glasses_sprite.setTexture(*glasses_texture);
     setScaleAndOrigin(&glasses_sprite);
     glasses_sprite.setPosition(body_pos + eye_offset);
 
+    // Set Hat
     hat_sprite.setTexture(*hat_texture);
     setScaleAndOrigin(&hat_sprite);
     sf::Vector2f hat_offset = (SPRITE_OFFSETS.at(type).hat_offset) * hat_sprite.getScale().x;
     hat_sprite.setPosition(body_pos + hat_offset);
+    hat_sprite.setColor(sf::Color::White);
+
+    // Get a random colour for the hat if the hat is colourable
+    if (textures[3].canBeColored) {
+        hat_sprite.setColor(getRandomColour());
+    }
 
     character_loaded = true;
 }
@@ -102,8 +109,18 @@ void Character::setScaleAndOrigin(sf::Sprite* sprite) {
     sprite->setOrigin(sprite_bounds.width / 2.f, sprite_bounds.height / 2.f);
 }
 
+sf::Color Character::getRandomColour() {
+    return sf::Color(
+            std::rand() % 256,
+            std::rand() % 256,
+            std::rand() % 256
+            );
+}
 
 
+
+// Debug
+// Todo: Remove before building
 std::string Character::creatureTypeToString(CreatureType type) {
     switch (type) {
         case(CreatureType::BEAR):
@@ -129,8 +146,6 @@ std::string Character::creatureTypeToString(CreatureType type) {
     }
 }
 
-// Debug
-// Todo: Remove before building
 void Character::drawBoundingBoxes(sf::RenderWindow &window) {
     if (!character_loaded) return;
 
