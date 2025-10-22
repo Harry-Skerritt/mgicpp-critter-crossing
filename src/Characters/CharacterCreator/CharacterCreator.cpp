@@ -13,14 +13,14 @@ CharacterCreator::~CharacterCreator() {
 void CharacterCreator::LoadCharacterTextures() {
 
     // Add Bodies
-    AddTexture(TextureType::BODY, "Bodies/BearBody.png", 1.0f, CreatureType::BEAR);
-    AddTexture(TextureType::BODY, "Bodies/ChickenBody.png", 1.0f, CreatureType::CHICKEN);
-    AddTexture(TextureType::BODY, "Bodies/FoxBody.png", 1.0f, CreatureType::FOX);
-    AddTexture(TextureType::BODY, "Bodies/HedgehogBody.png", 1.0f, CreatureType::HEDGEHOG);
-    AddTexture(TextureType::BODY, "Bodies/ReindeerBody.png", 1.0f, CreatureType::REINDEER);
-    AddTexture(TextureType::BODY, "Bodies/SkunkBody.png", 1.0f, CreatureType::SKUNK);
-    AddTexture(TextureType::BODY, "Bodies/SquirrelBody.png", 1.0f, CreatureType::SKUNK);
-    AddTexture(TextureType::BODY, "Bodies/WolfBody.png", 1.0f, CreatureType::WOLF);
+    AddTexture(TextureType::BODY, "Bodies/BearBody.png", 1.0f, false, CreatureType::BEAR);
+    AddTexture(TextureType::BODY, "Bodies/ChickenBody.png", 1.0f, false, CreatureType::CHICKEN);
+    AddTexture(TextureType::BODY, "Bodies/FoxBody.png", 1.0f, false, CreatureType::FOX);
+    AddTexture(TextureType::BODY, "Bodies/HedgehogBody.png", 1.0f, false, CreatureType::HEDGEHOG);
+    AddTexture(TextureType::BODY, "Bodies/ReindeerBody.png", 1.0f, false, CreatureType::REINDEER);
+    AddTexture(TextureType::BODY, "Bodies/SkunkBody.png", 1.0f, false, CreatureType::SKUNK);
+    AddTexture(TextureType::BODY, "Bodies/SquirrelBody.png", 1.0f, false, CreatureType::SQUIRREL);
+    AddTexture(TextureType::BODY, "Bodies/WolfBody.png", 1.0f, false,  CreatureType::WOLF);
 
     // Eyes
     AddTexture(TextureType::EYES, "Eyes/Eyes1.png", 1.0f);
@@ -39,30 +39,39 @@ void CharacterCreator::LoadCharacterTextures() {
 
     // Hats
     AddTexture(TextureType::HATS, "Hats/None.png", 0.8f);
-    AddTexture(TextureType::HATS, "Hats/Hat1.png", 0.15f);
+    AddTexture(TextureType::HATS, "Hats/Hat1.png", 0.15f, true);
     AddTexture(TextureType::HATS, "Hats/Hat2.png", 0.1f);
-    AddTexture(TextureType::HATS, "Hats/Hat3.png", 0.15f);
+    AddTexture(TextureType::HATS, "Hats/Hat3.png", 0.15f, true);
     AddTexture(TextureType::HATS, "Hats/Hat4.png", 0.15f);
-    AddTexture(TextureType::HATS, "Hats/Hat5.png", 0.15f);
+    AddTexture(TextureType::HATS, "Hats/Hat5.png", 0.15f, true);
     AddTexture(TextureType::HATS, "Hats/Hat6.png", 0.15f);
-    AddTexture(TextureType::HATS, "Hats/Hat7.png", 0.15f);
-    AddTexture(TextureType::HATS, "Hats/Hat8.png", 0.15f);
+    AddTexture(TextureType::HATS, "Hats/Hat7.png", 0.15f, true);
+    AddTexture(TextureType::HATS, "Hats/Hat8.png", 0.15f, true);
 
     // Get the texture count
     GetTotalTextureCount();
 
 }
 
-void CharacterCreator::ChooseCharacter() {
-    body_texture = *GetRandomTexture(TextureType::BODY);
-    eyes_texture = *GetRandomTexture(TextureType::EYES);
-    glasses_texture = *GetRandomTexture(TextureType::GLASSES);
-    hat_texture = *GetRandomTexture(TextureType::HATS);
+std::array<sf::Texture*, 4> CharacterCreator::ChooseCharacter() {
+    std::array<sf::Texture*, 4> textures{};
+
+    textures[0] = GetRandomTexture(TextureType::BODY);
+    textures[1] = GetRandomTexture(TextureType::EYES);
+    textures[2] = GetRandomTexture(TextureType::GLASSES);
+    textures[3] = GetRandomTexture(TextureType::HATS);
+
+    return textures;
+}
+
+CreatureType CharacterCreator::getCreatureType() {
+    return last_creature_type;
 }
 
 
 
-bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, CreatureType creature) {
+
+bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, bool canBeColoured, CreatureType creature) {
 
     std::shared_ptr<sf::Texture> temp_texture = std::make_shared<sf::Texture>() ;
     if (!temp_texture->loadFromFile(RESOURCES_LOC + fileLoc)) {
@@ -75,16 +84,16 @@ bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float w
         return false;
     }
 
-    TextureEntry entry{temp_texture, weight, creature};
+    TextureEntry entry{temp_texture, weight, creature, canBeColoured};
     textures[type].push_back(entry);
 
     return true;
 }
 
 
-const sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
+sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
 {
-    const std::vector<TextureEntry> entries = textures[type];
+    const std::vector<TextureEntry>& entries = textures[type];
     if (entries.empty()) {
         std::cout << "No textures available" << std::endl;
         return nullptr;
@@ -117,7 +126,7 @@ const sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
             cumulative += entries[i].weight;
             if (random <= cumulative) {
                 if (type == TextureType::BODY) {
-                    if (entries[i].creatureType != lastCreatureType || entries.size() == 1) {
+                    if (entries[i].creatureType != last_creature_type || entries.size() == 1) {
                         chosen = &entries[i];
                     }
                 } else {
@@ -134,7 +143,7 @@ const sf::Texture* CharacterCreator::GetRandomTexture(TextureType type)
         chosen = &entries.front();
 
     if (type == TextureType::BODY) {
-        lastCreatureType = chosen->creatureType;
+        last_creature_type = chosen->creatureType;
     }
 
     return chosen->texture.get();
@@ -154,5 +163,9 @@ void CharacterCreator::GetTotalTextureCount() {
         texture_count[type] = count;
     }
 }
+
+
+
+
 
 

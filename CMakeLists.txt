@@ -21,8 +21,10 @@ set(SOURCE_FILES
         src/main.cpp
         src/Game.cpp
         src/Game.h
-        src/CharacterCreator/CharacterCreator.h
-        src/CharacterCreator/CharacterCreator.cpp
+        src/Characters/CharacterCreator/CharacterCreator.h
+        src/Characters/CharacterCreator/CharacterCreator.cpp
+        src/Characters/Character.h
+        src/Characters/Character.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use
 
