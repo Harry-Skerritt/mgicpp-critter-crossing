@@ -5,10 +5,13 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <array>
 #include <iostream>
 #include "CharacterCreator/CharacterCreator.h"
+
+class Game;
 
 struct CharacterOffset {
     sf::Vector2f eyes_offset;
@@ -23,7 +26,7 @@ public:
     ~Character();
 
     void loadCharacter(std::array<TextureProperties, 4> texture, CreatureType type);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window, Game& game);
 
     void setViewCentre(const sf::Vector2f& centre);
 

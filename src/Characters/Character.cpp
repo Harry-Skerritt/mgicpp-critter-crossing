@@ -3,6 +3,7 @@
 //
 
 #include "Character.h"
+#include "../Game.h"
 
 Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
     temp_shape.setSize(size);
@@ -64,7 +65,7 @@ void Character::loadCharacter(std::array<TextureProperties, 4> textures, Creatur
     character_loaded = true;
 }
 
-void Character::draw(sf::RenderWindow &window) {
+void Character::draw(sf::RenderWindow &window, Game& game) {
     sf::Vector2u winSize = window.getSize();
     view.setViewport({
         view_rect.left / winSize.x,
@@ -85,7 +86,7 @@ void Character::draw(sf::RenderWindow &window) {
         window.draw(hat_sprite);
     }
 
-    window.setView(window.getDefaultView());
+    window.setView(game.getDefaultView());
 }
 
 void Character::setViewCentre(const sf::Vector2f &centre) {

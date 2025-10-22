@@ -1,6 +1,7 @@
 #ifndef CHARACTERCREATOR_H
 #define CHARACTERCREATOR_H
 
+#pragma once
 #include <iostream>
 #include <vector>
 #include <map>
@@ -22,6 +23,7 @@ struct TextureProperties {
   bool canBeColored;
 };
 
+
 class CharacterCreator
 {
 // Funcs
@@ -29,7 +31,7 @@ public:
   CharacterCreator();
   ~CharacterCreator();
 
-  void LoadCharacterTextures();
+  bool LoadCharacterTextures();
   std::array<TextureProperties, 4> ChooseCharacter();
   CreatureType getCreatureType();
 

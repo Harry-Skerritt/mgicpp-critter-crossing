@@ -4,47 +4,48 @@ CharacterCreator::CharacterCreator() { }
 
 CharacterCreator::~CharacterCreator() = default;
 
-void CharacterCreator::LoadCharacterTextures() {
+bool CharacterCreator::LoadCharacterTextures() {
 
     // Add Bodies
-    AddTexture(TextureType::BODY, "Bodies/BearBody.png", 1.0f, false, CreatureType::BEAR);
-    AddTexture(TextureType::BODY, "Bodies/ChickenBody.png", 1.0f, false, CreatureType::CHICKEN);
-    AddTexture(TextureType::BODY, "Bodies/FoxBody.png", 1.0f, false, CreatureType::FOX);
-    AddTexture(TextureType::BODY, "Bodies/HedgehogBody.png", 1.0f, false, CreatureType::HEDGEHOG);
-    AddTexture(TextureType::BODY, "Bodies/ReindeerBody.png", 1.0f, false, CreatureType::REINDEER);
-    AddTexture(TextureType::BODY, "Bodies/SkunkBody.png", 1.0f, false, CreatureType::SKUNK);
-    AddTexture(TextureType::BODY, "Bodies/SquirrelBody.png", 1.0f, false, CreatureType::SQUIRREL);
-    AddTexture(TextureType::BODY, "Bodies/WolfBody.png", 1.0f, false,  CreatureType::WOLF);
+    if (!AddTexture(TextureType::BODY, "Bodies/BearBody.png", 1.0f, false, CreatureType::BEAR)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/ChickenBody.png", 1.0f, false, CreatureType::CHICKEN)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/FoxBody.png", 1.0f, false, CreatureType::FOX)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/HedgehogBody.png", 1.0f, false, CreatureType::HEDGEHOG)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/ReindeerBody.png", 1.0f, false, CreatureType::REINDEER)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/SkunkBody.png", 1.0f, false, CreatureType::SKUNK)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/SquirrelBody.png", 1.0f, false, CreatureType::SQUIRREL)) return false;
+    if (!AddTexture(TextureType::BODY, "Bodies/WolfBody.png", 1.0f, false,  CreatureType::WOLF)) return false;
 
     // Eyes
-    AddTexture(TextureType::EYES, "Eyes/Eyes1.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes2.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes3.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes4.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes5.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes6.png", 1.0f);
-    AddTexture(TextureType::EYES, "Eyes/Eyes7.png", 1.0f);
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes1.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes2.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes3.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes4.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes5.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes6.png", 1.0f)) return false;
+    if (!AddTexture(TextureType::EYES, "Eyes/Eyes7.png", 1.0f)) return false;
 
     // Glasses
-    AddTexture(TextureType::GLASSES, "Glasses/None.png", 0.8f);
-    AddTexture(TextureType::GLASSES, "Glasses/Glasses1.png", 0.15f);
-    AddTexture(TextureType::GLASSES, "Glasses/Glasses2.png", 0.1f);
-    AddTexture(TextureType::GLASSES, "Glasses/Glasses3.png", 0.15f);
+    if (!AddTexture(TextureType::GLASSES, "Glasses/None.png", 0.8f)) return false;
+    if (!AddTexture(TextureType::GLASSES, "Glasses/Glasses1.png", 0.15f)) return false;
+    if (!AddTexture(TextureType::GLASSES, "Glasses/Glasses2.png", 0.1f)) return false;
+    if (!AddTexture(TextureType::GLASSES, "Glasses/Glasses3.png", 0.15f)) return false;
 
     // Hats
-    AddTexture(TextureType::HATS, "Hats/None.png", 0.8f);
-    AddTexture(TextureType::HATS, "Hats/Hat1.png", 0.15f, true);
-    AddTexture(TextureType::HATS, "Hats/Hat2.png", 0.1f);
-    AddTexture(TextureType::HATS, "Hats/Hat3.png", 0.15f, true);
-    AddTexture(TextureType::HATS, "Hats/Hat4.png", 0.15f);
-    AddTexture(TextureType::HATS, "Hats/Hat5.png", 0.15f, true);
-    AddTexture(TextureType::HATS, "Hats/Hat6.png", 0.15f);
-    AddTexture(TextureType::HATS, "Hats/Hat7.png", 0.15f, true);
-    AddTexture(TextureType::HATS, "Hats/Hat8.png", 0.15f, true);
+    if (!AddTexture(TextureType::HATS, "Hats/None.png", 0.8f)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat1.png", 0.15f, true)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat2.png", 0.1f)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat3.png", 0.15f, true)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat4.png", 0.15f)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat5.png", 0.15f, true)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat6.png", 0.15f)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat7.png", 0.15f, true)) return false;
+    if (!AddTexture(TextureType::HATS, "Hats/Hat8.png", 0.15f, true)) return false;
 
     // Get the texture count
     GetTotalTextureCount();
 
+    return true;
 }
 
 std::array<TextureProperties, 4> CharacterCreator::ChooseCharacter() {
