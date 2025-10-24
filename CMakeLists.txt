@@ -25,7 +25,14 @@ set(SOURCE_FILES
         src/Characters/CharacterCreator/CharacterCreator.cpp
         src/Characters/Character.h
         src/Characters/Character.cpp
+        src/Passport/Passport.h
+        src/Passport/Passport.cpp
+        src/Passport/PassportDataManager/PassportDataManager.h
+        src/Passport/PassportDataManager/PassportDataManager.cpp
+        src/Manager/FontManager/FontManager.h
+        src/Manager/FontManager/FontManager.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
+
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use
 
 target_link_libraries(CritterCrossing PRIVATE sfml-graphics sfml-window sfml-system sfml-network sfml-audio) # Links the SFML libraries we need to our application

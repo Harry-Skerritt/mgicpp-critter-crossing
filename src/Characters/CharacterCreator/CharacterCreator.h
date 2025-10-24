@@ -2,11 +2,13 @@
 #define CHARACTERCREATOR_H
 
 #pragma once
+#include <SFML/Graphics.hpp>
+
 #include <iostream>
 #include <vector>
 #include <map>
 #include <array>
-#include <SFML/Graphics.hpp>
+
 
 enum class CreatureType { BEAR = 0, CHICKEN, FOX, HEDGEHOG, REINDEER, SKUNK, SQUIRREL, WOLF, NONE };
 enum class TextureType { BODY = 0, EYES, GLASSES, HATS, COUNT };

@@ -7,9 +7,12 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+
+#include "CharacterCreator/CharacterCreator.h"
+
 #include <array>
 #include <iostream>
-#include "CharacterCreator/CharacterCreator.h"
+
 
 class Game;
 
@@ -30,14 +33,13 @@ public:
 
     void setViewCentre(const sf::Vector2f& centre);
 
-
 private:
     void setScaleAndOrigin(sf::Sprite* sprite);
     static sf::Color getRandomColour();
+
     // Debug
     // Todo: Remove before building
     std::string creatureTypeToString(CreatureType type);
-    void drawBoundingBoxes(sf::RenderWindow &window);
 
 // Vars
 public:

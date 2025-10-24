@@ -4,6 +4,7 @@ CharacterCreator::CharacterCreator() { }
 
 CharacterCreator::~CharacterCreator() = default;
 
+// --- Setup ---
 bool CharacterCreator::LoadCharacterTextures() {
 
     // Add Bodies
@@ -48,6 +49,7 @@ bool CharacterCreator::LoadCharacterTextures() {
     return true;
 }
 
+// --- Functionality
 std::array<TextureProperties, 4> CharacterCreator::ChooseCharacter() {
     std::array<TextureProperties, 4> textures{};
 
@@ -59,21 +61,23 @@ std::array<TextureProperties, 4> CharacterCreator::ChooseCharacter() {
     return textures;
 }
 
+// --- Getters ---
 CreatureType CharacterCreator::getCreatureType() {
     return last_creature_type;
 }
 
 // --- PRIVATE ---
+// Textures
 bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, bool canBeColoured, CreatureType creature) {
 
     std::shared_ptr<sf::Texture> temp_texture = std::make_shared<sf::Texture>() ;
     if (!temp_texture->loadFromFile(RESOURCES_LOC + fileLoc)) {
-        std::cout << "Error loading texture: " << fileLoc << std::endl;
+        std::cerr << "CharacterCreator: Error loading texture: " << fileLoc << std::endl;
         return false;
     }
 
     if (weight < 0.0f || weight > 1.0f) {
-        std::cout << "Weight must be between 0.0 and 1.0" << std::endl;
+        std::cerr << "CharacterCreator: Weight must be between 0.0 and 1.0" << std::endl;
         return false;
     }
 
@@ -88,7 +92,7 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
     TextureProperties properties{};
     const std::vector<TextureEntry>& entries = textures[type];
     if (entries.empty()) {
-        std::cout << "No textures available" << std::endl;
+        std::cerr << "CharacterCreator: No textures available" << std::endl;
         return properties;
     }
 
@@ -102,7 +106,7 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 
     // Check the weight isn't 0
     if (total_weight <= 0.0f) {
-        std::cout << "Total weight is 0.0" << std::endl;
+        std::cout << "CharacterCreator: Total weight is 0.0" << std::endl;
         return properties;
     }
 
@@ -145,7 +149,7 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 }
 
 
-// Helpers for counts
+// Helpers
 int CharacterCreator::GetTextureCount(TextureType type) {
     return textures[type].size();
 }

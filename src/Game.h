@@ -7,6 +7,7 @@
 
 #include "Characters/Character.h"
 #include "Characters/CharacterCreator/CharacterCreator.h"
+#include "Passport/Passport.h"
 
 class Game
 {
@@ -23,6 +24,7 @@ class Game
   const sf::View& getDefaultView();
 
 private:
+    bool loadFonts();
 
 // Vars
 public:
@@ -39,6 +41,11 @@ private:
   const float CHARACTER_WIDTH = 300.f;
   const float CHARACTER_HEIGHT_MULTIPLIER = 1.09f;
   std::unique_ptr<Character> temp_character;
+
+  PassportDataManager passport_data_manager;
+  const float PASSPORT_WIDTH = 600.f;
+  const float PASSPORT_HEIGHT_MULTIPLIER = 1.391f;
+  std::unique_ptr<Passport> temp_passport;
 
 
 

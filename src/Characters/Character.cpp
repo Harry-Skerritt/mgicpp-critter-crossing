@@ -18,6 +18,7 @@ Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
 
 Character::~Character() = default;
 
+// --- Functionality ---
 void Character::loadCharacter(std::array<TextureProperties, 4> textures, CreatureType type) {
     character_loaded = false;
 
@@ -66,12 +67,12 @@ void Character::loadCharacter(std::array<TextureProperties, 4> textures, Creatur
 }
 
 void Character::draw(sf::RenderWindow &window, Game& game) {
-    sf::Vector2u winSize = window.getSize();
+    sf::Vector2f win_size = game.getDefaultView().getSize();
     view.setViewport({
-        view_rect.left / winSize.x,
-        view_rect.top / winSize.y,
-        view_rect.width / winSize.x,
-        view_rect.height / winSize.y
+        view_rect.left / win_size.x,
+        view_rect.top / win_size.y,
+        view_rect.width / win_size.x,
+        view_rect.height / win_size.y
         });
 
     window.setView(view);
@@ -89,6 +90,7 @@ void Character::draw(sf::RenderWindow &window, Game& game) {
     window.setView(game.getDefaultView());
 }
 
+// --- View ---
 void Character::setViewCentre(const sf::Vector2f &centre) {
     view.setCenter(centre);
 }
@@ -145,37 +147,4 @@ std::string Character::creatureTypeToString(CreatureType type) {
         default:
             return "Hmm...";
     }
-}
-
-void Character::drawBoundingBoxes(sf::RenderWindow &window) {
-    if (!character_loaded) return;
-
-    auto drawBox = [&](sf::Sprite& sprite, sf::Color color){
-        sf::FloatRect bounds = sprite.getGlobalBounds();
-        sf::RectangleShape rect;
-        rect.setSize({bounds.width, bounds.height});
-        rect.setPosition(bounds.left, bounds.top);
-        rect.setFillColor(sf::Color::Transparent);
-        rect.setOutlineColor(color);
-        rect.setOutlineThickness(2.f);
-        window.draw(rect);
-    };
-
-    drawBox(body_sprite, sf::Color::Red);
-    drawBox(eye_sprite, sf::Color::Green);
-    drawBox(glasses_sprite, sf::Color::Blue);
-    drawBox(hat_sprite, sf::Color::Yellow);
-
-    auto drawCenter = [&](sf::Sprite& sprite, sf::Color color){
-        sf::CircleShape marker(5.f);
-        marker.setOrigin(5.f, 5.f);
-        marker.setFillColor(color);
-        marker.setPosition(sprite.getPosition());
-        window.draw(marker);
-    };
-
-    drawCenter(body_sprite, sf::Color::Red);
-    drawCenter(eye_sprite, sf::Color::Green);
-    drawCenter(glasses_sprite, sf::Color::Blue);
-    drawCenter(hat_sprite, sf::Color::Yellow);
 }
