@@ -34,7 +34,6 @@ public:
     void setViewCentre(const sf::Vector2f& centre);
 
 private:
-    void setScaleAndOrigin(sf::Sprite* sprite);
     static sf::Color getRandomColour();
 
     // Debug

@@ -71,18 +71,7 @@ bool Passport::setupBackground() {
     }
 
     background.setTexture(background_texture);
-
-    sf::Vector2f view_size = view.getSize();
-    sf::Vector2f view_centre = view.getCenter();
-
-    background.setOrigin(0.f, 0.f);
-    background.setPosition(view_centre - view_size / 2.f);
-
-    sf::Vector2u size = background_texture.getSize();
-    std::cout << "Background texture size: " << size.x << ", " << size.y << std::endl;
-    background.setScale(
-        view_size.x / static_cast<float>(size.x),
-        view_size.y / static_cast<float>(size.y));
+    ScaleTools::scaleToView(background, view);
 }
 
 bool Passport::setupText() {

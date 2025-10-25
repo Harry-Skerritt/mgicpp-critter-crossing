@@ -22,6 +22,16 @@ namespace ScaleTools {
     /// <param name="font_size"> An int containing the unscaled font size </param>
     /// <param name="scale_sprite"> A sprite which the position will scale around </param>
     unsigned int getScaledFont(int font_size, sf::Sprite& scale_sprite);
+
+    /// <summary>
+    /// Scale an object (sprite) to fill the view
+    /// </summary>
+    /// <param name="sprite_to_scale"> The object to scale </param>
+    /// <param name="view"> The view it needs to fill </param>
+    /// <param name="set_centre_origin"> Set the origin to the centre as opposed to the top left </param>
+    /// <param name="scale_uniform"> Whether to scale uniformly or not </param>
+    void scaleToView(sf::Sprite& sprite_to_scale, const sf::View& view, bool set_centre_origin = false, bool scale_uniform = true);
+
 }
 
 

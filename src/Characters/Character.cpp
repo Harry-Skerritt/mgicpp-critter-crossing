@@ -4,6 +4,7 @@
 
 #include "Character.h"
 #include "../Game.h"
+#include "../Helpers/ScaleTools/ScaleTools.h"
 
 Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
     temp_shape.setSize(size);
@@ -34,7 +35,7 @@ void Character::loadCharacter(std::array<TextureProperties, 4> textures, Creatur
 
     // Set Body
     body_sprite.setTexture(*body_texture);
-    setScaleAndOrigin(&body_sprite);
+    ScaleTools::scaleToView(body_sprite, view, true);
     sf::Vector2f body_offset = (SPRITE_OFFSETS.at(type).body_offset) * body_sprite.getScale().x;
     sf::Vector2f body_base_pos = {0.f, 0.f};
     sf::Vector2f body_pos = body_base_pos + body_offset;
@@ -42,18 +43,18 @@ void Character::loadCharacter(std::array<TextureProperties, 4> textures, Creatur
 
     // Set Eyes
     eye_sprite.setTexture(*eye_texture);
-    setScaleAndOrigin(&eye_sprite);
+    ScaleTools::scaleToView(eye_sprite, view, true);
     sf::Vector2f eye_offset = (SPRITE_OFFSETS.at(type).eyes_offset) * eye_sprite.getScale().x;
     eye_sprite.setPosition(body_pos + eye_offset);
 
     // Set Glasses
     glasses_sprite.setTexture(*glasses_texture);
-    setScaleAndOrigin(&glasses_sprite);
+    ScaleTools::scaleToView(glasses_sprite, view, true);
     glasses_sprite.setPosition(body_pos + eye_offset);
 
     // Set Hat
     hat_sprite.setTexture(*hat_texture);
-    setScaleAndOrigin(&hat_sprite);
+    ScaleTools::scaleToView(hat_sprite, view, true);
     sf::Vector2f hat_offset = (SPRITE_OFFSETS.at(type).hat_offset) * hat_sprite.getScale().x;
     hat_sprite.setPosition(body_pos + hat_offset);
     hat_sprite.setColor(sf::Color::White);
@@ -97,21 +98,6 @@ void Character::setViewCentre(const sf::Vector2f &centre) {
 
 
 // --- PRIVATE ---
-void Character::setScaleAndOrigin(sf::Sprite* sprite) {
-    // Handle Scale
-    sf::Vector2f view_size = view.getSize();
-    sf::FloatRect sprite_bounds = sprite->getLocalBounds();
-
-    float scaleX = view_size.x / sprite_bounds.width;
-    float scaleY = view_size.y / sprite_bounds.height;
-
-    float uniform_scale = std::min(scaleX, scaleY);
-    sprite->setScale(uniform_scale, uniform_scale);
-
-    // Handle Origin
-    sprite->setOrigin(sprite_bounds.width / 2.f, sprite_bounds.height / 2.f);
-}
-
 sf::Color Character::getRandomColour() {
     return sf::Color(
             std::rand() % 256,

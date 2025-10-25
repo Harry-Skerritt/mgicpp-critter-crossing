@@ -31,6 +31,8 @@ set(SOURCE_FILES
         src/Passport/PassportDataManager/PassportDataManager.cpp
         src/Manager/FontManager/FontManager.h
         src/Manager/FontManager/FontManager.cpp
+        src/Helpers/ScaleTools/ScaleTools.h
+        src/Helpers/ScaleTools/ScaleTools.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
 
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use
