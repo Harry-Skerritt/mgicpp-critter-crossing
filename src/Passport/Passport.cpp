@@ -6,6 +6,7 @@
 
 #include "../Game.h"
 #include "../Manager/FontManager/FontManager.h"
+#include "../Helpers/ScaleTools/ScaleTools.h"
 
 Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size) {
     view.setSize(size);
@@ -86,36 +87,22 @@ bool Passport::setupBackground() {
 
 bool Passport::setupText() {
     name_text.setFont(FontManager::getInstance().getFont("Jua"));
-    name_text.setCharacterSize(getScaledFont(unscaled_font_size, background));
+    name_text.setCharacterSize(ScaleTools::getScaledFont(unscaled_font_size, background));
     name_text.setFillColor(text_colour);
-    name_text.setPosition(getScaledPosition(name_text_pos_unscaled, background));
-    name_text.setString("Name: ");
+    name_text.setPosition(ScaleTools::getScaledPosition(name_text_pos_unscaled, background));
 
 
     age_text.setFont(FontManager::getInstance().getFont("Jua"));
-    age_text.setCharacterSize(getScaledFont(unscaled_font_size, background));
+    age_text.setCharacterSize(ScaleTools::getScaledFont(unscaled_font_size, background));
     age_text.setFillColor(text_colour);
-    age_text.setPosition(getScaledPosition(age_text_pos_unscaled, background));
-    age_text.setString("Age: ");
+    age_text.setPosition(ScaleTools::getScaledPosition(age_text_pos_unscaled, background));
 
     district_text.setFont(FontManager::getInstance().getFont("Jua"));
-    district_text.setCharacterSize(getScaledFont(unscaled_font_size, background));
+    district_text.setCharacterSize(ScaleTools::getScaledFont(unscaled_font_size, background));
     district_text.setFillColor(text_colour);
-    district_text.setPosition(getScaledPosition(district_text_pos_unscaled, background));
-    district_text.setString("District: ");
+    district_text.setPosition(ScaleTools::getScaledPosition(district_text_pos_unscaled, background));
 }
 
-sf::Vector2f Passport::getScaledPosition(sf::Vector2f& unscaled_position, sf::Sprite& scaled_sprite) {
-    sf::Vector2f sprite_scale = scaled_sprite.getScale();
-    return {
-        scaled_sprite.getPosition().x + unscaled_position.x * sprite_scale.x,
-        scaled_sprite.getPosition().y + unscaled_position.y * sprite_scale.y};
-}
-
-unsigned int Passport::getScaledFont(int font_size, sf::Sprite &scaled_sprite) {
-    sf::Vector2f sprite_scale = scaled_sprite.getScale();
-    return static_cast<unsigned int>(font_size) * sprite_scale.y;
-}
 
 
 

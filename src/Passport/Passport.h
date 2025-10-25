@@ -34,11 +34,6 @@ private:
     bool setupBackground();
     bool setupText();
 
-    static sf::Vector2f getScaledPosition(sf::Vector2f& unscaled_position, sf::Sprite& scaled_sprite);
-    static unsigned int getScaledFont(int font_size, sf::Sprite& scaled_sprite);
-
-
-
 
 // Vars
 public:
