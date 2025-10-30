@@ -12,11 +12,21 @@ Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size) {
     view.setSize(size);
     view.setCenter(size.x / 2.f, size.y / 2.f);
 
+    background_rect.setSize(size);
+    background_rect.setFillColor(sf::Color::Red);
+    background_rect.setOrigin(size / 2.f);
+
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
 
     setupBackground();
     setupText();
 
+    // Character
+    passport_character = std::make_unique<Character>(
+        ScaleTools::getScaledPosition(character_unscaled_pos, background),
+        ScaleTools::getScaledSize(character_unscaled_size, background));
+
+    std::cout << "Scaled Pos: " << ScaleTools::getScaledPosition(character_unscaled_pos, background).x << ", " << ScaleTools::getScaledPosition(character_unscaled_pos, background).y << std::endl;
 }
 
 Passport::~Passport() = default;
@@ -27,7 +37,15 @@ void Passport::setDataManager(PassportDataManager *manager) {
 }
 
 // --- Functionality ---
-void Passport::initPassport(Character *character) {
+void Passport::initPassport(const CharacterAssetData& data) {
+    asset_data = std::make_unique<CharacterAssetData>(data);
+
+    if (asset_data == nullptr) {
+        // Gen new data
+        std::cerr << "Passport::initPassport: asset data is null" << std::endl;
+        asset_data = nullptr;
+    }
+
     // Setup text
     display_name = data_manager->generateName();
     display_age = std::to_string(data_manager->generateAge());
@@ -49,7 +67,13 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
 
     window.setView(view);
 
+    window.draw(background_rect);
+
     window.draw(background);
+
+    passport_character->loadCharacter(*asset_data);
+    passport_character->drawInPassport(window, *this);
+    //window.setView(view);
 
     window.draw(name_text);
     window.draw(age_text);
@@ -58,6 +82,9 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
     window.setView(game.getDefaultView());
 }
 
+const sf::View& Passport::getDefaultView() {
+    return view;
+}
 
 
 

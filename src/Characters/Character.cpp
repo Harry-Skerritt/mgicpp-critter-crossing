@@ -13,21 +13,29 @@ Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
 
     view.setSize(size);
     view.setCenter(0.f, 0.f);
+    //view.setCenter(position.x + size.x / 2.f, position.y + size.y / 2.f);
 
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
+
+    std::cerr << "View center: " << view.getCenter().x << ", " << view.getCenter().y << std::endl;
+    std::cerr << "View size: " << view.getSize().x << ", " << view.getSize().y << std::endl;
 }
 
 Character::~Character() = default;
 
 // --- Functionality ---
-void Character::loadCharacter(std::array<TextureProperties, 4> textures, CreatureType type) {
+void Character::loadCharacter(const CharacterAssetData& asset_data) {
+    if (&asset_data == nullptr) {
+        return;
+    }
     character_loaded = false;
+    CreatureType type = asset_data.creature_type;
 
     // Load textures from array
-    body_texture = textures[0].texture;
-    eye_texture = textures[1].texture;
-    glasses_texture = textures[2].texture;
-    hat_texture = textures[3].texture;
+    body_texture = asset_data.body_texture;
+    eye_texture = asset_data.eye_texture;
+    glasses_texture = asset_data.glasses_texture;
+    hat_texture = asset_data.hat_texture;
 
     if (body_texture == nullptr || eye_texture == nullptr || glasses_texture == nullptr || hat_texture == nullptr) {
         return;
@@ -60,8 +68,10 @@ void Character::loadCharacter(std::array<TextureProperties, 4> textures, Creatur
     hat_sprite.setColor(sf::Color::White);
 
     // Get a random colour for the hat if the hat is colourable
-    if (textures[3].canBeColored) {
-        hat_sprite.setColor(getRandomColour());
+    if (asset_data.hat_colour != nullptr) {
+        hat_sprite.setColor(*asset_data.hat_colour);
+    } else {
+        hat_sprite.setColor(sf::Color::White);
     }
 
     character_loaded = true;
@@ -91,21 +101,44 @@ void Character::draw(sf::RenderWindow &window, Game& game) {
     window.setView(game.getDefaultView());
 }
 
+void Character::drawInPassport(sf::RenderWindow& window, Passport &passport) {
+    sf::Vector2f win_size = static_cast<sf::Vector2f>(window.getSize());
+
+    sf::FloatRect passport_rect = passport.getViewRect();
+
+    sf::FloatRect abs_rect(
+        passport_rect.left + view_rect.left,
+        passport_rect.top + view_rect.top,
+        view_rect.width,
+        view_rect.height);
+
+    view.setViewport({
+        abs_rect.left / win_size.x,
+        abs_rect.top / win_size.y,
+        abs_rect.width / win_size.x,
+        abs_rect.height / win_size.y
+    });
+
+    window.setView(view);
+
+    // Background
+    window.draw(temp_shape);
+
+    if (character_loaded) {
+        window.draw(body_sprite);
+        window.draw(eye_sprite);
+        window.draw(glasses_sprite);
+        window.draw(hat_sprite);
+    }
+
+    window.setView(passport.getDefaultView());
+}
+
+
 // --- View ---
 void Character::setViewCentre(const sf::Vector2f &centre) {
     view.setCenter(centre);
 }
-
-
-// --- PRIVATE ---
-sf::Color Character::getRandomColour() {
-    return sf::Color(
-            std::rand() % 256,
-            std::rand() % 256,
-            std::rand() % 256
-            );
-}
-
 
 
 // Debug

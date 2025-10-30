@@ -38,6 +38,7 @@ private:
 
 
   CharacterCreator character_creator;
+  std::shared_ptr<CharacterAssetData> character_data = nullptr;
   const float CHARACTER_WIDTH = 300.f;
   const float CHARACTER_HEIGHT_MULTIPLIER = 1.09f;
   std::unique_ptr<Character> temp_character;

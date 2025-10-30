@@ -48,19 +48,18 @@ bool Game::init()
   // Init character
   temp_character = std::make_unique<Character>(sf::Vector2f(200, 200), sf::Vector2f(CHARACTER_WIDTH, (CHARACTER_WIDTH * CHARACTER_HEIGHT_MULTIPLIER)));
 
-
   return true;
 }
 
 void Game::update(float dt)
 {
-
+  temp_character->loadCharacter(*character_data);
 }
 
 void Game::render()
 {
   window.draw(background_sprite);
-  temp_character->draw(window, *this);
+  //temp_character->draw(window, *this);
   temp_passport->draw(window, *this);
 }
 
@@ -75,8 +74,8 @@ void Game::keyPressed(sf::Event event)
 
   if (event.type == sf::Event::KeyPressed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-      temp_character->loadCharacter(character_creator.ChooseCharacter(), character_creator.getCreatureType());
-      temp_passport->initPassport(nullptr);
+      character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
+      temp_passport->initPassport(*character_data);
     }
   }
 }

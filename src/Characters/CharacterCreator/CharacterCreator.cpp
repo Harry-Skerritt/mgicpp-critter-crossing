@@ -50,15 +50,20 @@ bool CharacterCreator::LoadCharacterTextures() {
 }
 
 // --- Functionality
-std::array<TextureProperties, 4> CharacterCreator::ChooseCharacter() {
-    std::array<TextureProperties, 4> textures{};
+CharacterAssetData CharacterCreator::ChooseCharacter() {
+    CharacterAssetData asset_data;
 
-    textures[0] = GetRandomTexture(TextureType::BODY);
-    textures[1] = GetRandomTexture(TextureType::EYES);
-    textures[2] = GetRandomTexture(TextureType::GLASSES);
-    textures[3] = GetRandomTexture(TextureType::HATS);
+    asset_data.body_texture = GetRandomTexture(TextureType::BODY).texture;
+    asset_data.eye_texture = GetRandomTexture(TextureType::EYES).texture;
+    asset_data.glasses_texture = GetRandomTexture(TextureType::GLASSES).texture;
 
-    return textures;
+    TextureProperties hat = GetRandomTexture(TextureType::HATS);
+    asset_data.hat_texture = hat.texture;
+    asset_data.hat_colour = hat.texture_colour;
+
+    asset_data.creature_type = last_creature_type;
+
+    return asset_data;
 }
 
 // --- Getters ---
@@ -144,7 +149,13 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
     }
 
     properties.texture = chosen->texture;
-    properties.canBeColored = chosen->canBeColoured;
+
+    if (chosen->canBeColoured) {
+        properties.texture_colour = getRandomColour();
+    } else {
+        properties.texture_colour = nullptr;
+    }
+
     return properties;
 }
 
@@ -162,6 +173,16 @@ void CharacterCreator::GetTotalTextureCount() {
         texture_count[type] = count;
     }
 }
+
+sf::Color* CharacterCreator::getRandomColour() {
+    sf::Color* colour = new sf::Color(
+        std::rand() % 256,
+            std::rand() % 256,
+            std::rand() % 256
+        );
+    return colour;
+}
+
 
 
 

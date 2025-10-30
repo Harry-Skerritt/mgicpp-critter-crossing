@@ -14,6 +14,7 @@ class FontManager {
 public:
     static FontManager& getInstance();
 
+    // Member funcs
     FontManager(const FontManager&) = delete;
     FontManager& operator=(const FontManager&) = delete;
     FontManager(FontManager&&) = delete;

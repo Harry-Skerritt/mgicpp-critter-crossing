@@ -15,6 +15,7 @@
 
 
 class Game;
+class Passport;
 
 struct CharacterOffset {
     sf::Vector2f eyes_offset;
@@ -28,14 +29,12 @@ public:
     Character(const sf::Vector2f& position, const sf::Vector2f& size);
     ~Character();
 
-    void loadCharacter(std::array<TextureProperties, 4> texture, CreatureType type);
+    void loadCharacter(const CharacterAssetData& asset_data);
     void draw(sf::RenderWindow& window, Game& game);
-
+    void drawInPassport(sf::RenderWindow& window, Passport& passport);
     void setViewCentre(const sf::Vector2f& centre);
 
 private:
-    static sf::Color getRandomColour();
-
     // Debug
     // Todo: Remove before building
     std::string creatureTypeToString(CreatureType type);

@@ -16,6 +16,15 @@ namespace ScaleTools {
     /// <param name="scale_sprite"> A sprite which the position will scale around </param>
     sf::Vector2f getScaledPosition(sf::Vector2f& unscaled_position, sf::Sprite& scale_sprite);
 
+
+    /// <summary>
+    /// Scales the unscaled_size based on the scale of scale_sprite
+    /// </summary>
+    /// <param name="unscaled_size"> A vector containing the unscaled size </param>
+    /// <param name="scale_sprite"> A sprite which the position will scale around </param>
+    sf::Vector2f getScaledSize(sf::Vector2f& unscaled_size, sf::Sprite& scale_sprite);
+
+
     /// <summary>
     /// Scales the font_size based on the scale of scale_sprite
     /// </summary>

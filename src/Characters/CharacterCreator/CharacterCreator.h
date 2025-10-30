@@ -9,7 +9,6 @@
 #include <map>
 #include <array>
 
-
 enum class CreatureType { BEAR = 0, CHICKEN, FOX, HEDGEHOG, REINDEER, SKUNK, SQUIRREL, WOLF, NONE };
 enum class TextureType { BODY = 0, EYES, GLASSES, HATS, COUNT };
 
@@ -20,10 +19,21 @@ struct TextureEntry {
   bool canBeColoured;
 };
 
+
 struct TextureProperties {
   std::shared_ptr<sf::Texture> texture;
-  bool canBeColored;
+  sf::Color* texture_colour;
 };
+
+struct CharacterAssetData {
+  std::shared_ptr<sf::Texture> body_texture;
+  std::shared_ptr<sf::Texture> eye_texture;
+  std::shared_ptr<sf::Texture> glasses_texture;
+  std::shared_ptr<sf::Texture> hat_texture;
+  sf::Color* hat_colour;
+  CreatureType creature_type;
+};
+
 
 
 class CharacterCreator
@@ -34,7 +44,7 @@ public:
   ~CharacterCreator();
 
   bool LoadCharacterTextures();
-  std::array<TextureProperties, 4> ChooseCharacter();
+  CharacterAssetData ChooseCharacter();
   CreatureType getCreatureType();
 
 
@@ -45,6 +55,7 @@ private:
   // Helpers for counts
   int GetTextureCount(TextureType type);
   void GetTotalTextureCount();
+  static sf::Color* getRandomColour();
 
 
 // Vars

@@ -5,13 +5,30 @@
 #include "ScaleTools.h"
 
 #include <cmath>
+#include <iostream>
 
 sf::Vector2f ScaleTools::getScaledPosition(sf::Vector2f &unscaled_position, sf::Sprite &scale_sprite) {
     sf::Vector2f sprite_scale = scale_sprite.getScale();
     return {
         scale_sprite.getPosition().x + unscaled_position.x * sprite_scale.x,
-        scale_sprite.getPosition().y + unscaled_position.y * sprite_scale.y};
+        scale_sprite.getPosition().y + unscaled_position.y * sprite_scale.y
+    };
 }
+
+
+sf::Vector2f ScaleTools::getScaledSize(sf::Vector2f &unscaled_size, sf::Sprite &scale_sprite) {
+    sf::Vector2f sprite_scale = scale_sprite.getScale();
+    //std::cout << "Sprite Scale: " << sprite_scale.x << ", " << sprite_scale.y << std::endl;
+    //std::cout << "Unscaled Size: " << unscaled_size.x << ", " << unscaled_size.y << std::endl;
+
+    float scale_x = unscaled_size.x * sprite_scale.x;
+    float scale_y = unscaled_size.y * sprite_scale.y;
+
+    //std::cout << "Scaled Size: " << scale_x << ", " << scale_y << std::endl;
+    return {scale_x, scale_y};
+}
+
+
 
 unsigned int ScaleTools::getScaledFont(int font_size, sf::Sprite &scaled_sprite) {
     sf::Vector2f sprite_scale = scaled_sprite.getScale();
