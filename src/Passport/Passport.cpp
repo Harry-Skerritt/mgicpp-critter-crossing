@@ -38,6 +38,15 @@ void Passport::setDataManager(PassportDataManager *manager) {
     data_manager = manager;
 }
 
+// --- State Manipulators ---
+void Passport::setPassportState(const PassportState state) {
+    current_state = state;
+}
+
+PassportState Passport::getPassportState() const {
+    return current_state;
+}
+
 // --- Functionality ---
 void Passport::initPassport(const CharacterAssetData& data) {
     asset_data = std::make_unique<CharacterAssetData>(data);
@@ -69,31 +78,32 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
         });
 
     window.setView(view);
-    window.draw(background);
 
-    preparePhoto();
-    window.draw(photo_sprite);
+    if (current_state == PassportState::CLOSED) {
+        window.draw(photo_sprite);
+    }
+    else if (current_state == PassportState::OPEN) {
+        window.draw(background);
+
+        preparePhoto();
+        window.draw(photo_sprite);
 
 
-    window.draw(name_text);
-    window.draw(age_text);
-    window.draw(district_text);
+        window.draw(name_text);
+        window.draw(age_text);
+        window.draw(district_text);
+    }
+
+
 
     window.setView(game.getDefaultView());
 }
-
-const sf::View& Passport::getDefaultView() {
-    return view;
-}
-
-
-
-
 
 
 // --- PRIVATE ---
 // Setup
 bool Passport::setupBackground() {
+    // Open Background
     if (!background_texture.loadFromFile("../Data/Images/Passport.png")) {
         std::cerr << "Passport: Failed to load background texture" << std::endl;
         return false;
@@ -101,6 +111,14 @@ bool Passport::setupBackground() {
 
     background.setTexture(background_texture);
     ScaleTools::scaleToView(background, view);
+
+    // Closed Background
+    if (!closed_passport_texture.loadFromFile("../Data/Images/ClosedPassport.png")) {
+        std::cerr << "Passport: Failed to load closed passport texture" << std::endl;
+        return false;
+    }
+    closed_passport_sprite.setTexture(closed_passport_texture);
+    ScaleTools::scaleToView(closed_passport_sprite, view, false, false);
     return true;
 }
 

@@ -18,6 +18,7 @@
 #include <sstream>
 
 
+enum class PassportState { OPEN, CLOSED };
 
 class Passport{
 // Funcs
@@ -26,14 +27,14 @@ public:
     ~Passport();
 
     void initPassport(const CharacterAssetData& data);
-    void setDataManager(PassportDataManager* dataManager);
+    void setDataManager(PassportDataManager* manager);
+
+    void setPassportState(PassportState state);
+    PassportState getPassportState() const;
 
     void draw(sf::RenderWindow &window, Game& game);
 
 
-    const sf::View& getDefaultView();
-
-    const sf::FloatRect& getViewRect() { return view_rect; }
 
 private:
     bool setupBackground();
@@ -47,6 +48,12 @@ private:
 public:
 private:
     PassportDataManager* data_manager;
+
+    PassportState current_state = PassportState::CLOSED;
+
+    // Closed State
+    sf::Texture closed_passport_texture;
+    sf::Sprite closed_passport_sprite;
 
     // View
     sf::View view;
