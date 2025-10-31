@@ -14,6 +14,7 @@
 #include <iostream>
 
 
+
 class Game;
 class Passport;
 
@@ -31,7 +32,8 @@ public:
 
     void loadCharacter(const CharacterAssetData& asset_data);
     void draw(sf::RenderWindow& window, Game& game);
-    void drawInPassport(sf::RenderWindow& window, Passport& passport);
+    void drawInPassport(sf::RenderTarget& target);
+
     void setViewCentre(const sf::Vector2f& centre);
 
 private:
@@ -46,6 +48,8 @@ private:
     // View
     sf::View view;
     sf::FloatRect view_rect;
+    sf::Vector2f view_pos;
+    sf::Vector2f view_size;
 
     sf::RectangleShape temp_shape;
 

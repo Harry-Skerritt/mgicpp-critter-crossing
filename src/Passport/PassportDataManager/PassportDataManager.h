@@ -19,8 +19,8 @@ public:
     ~PassportDataManager();
 
     // Setup
-    void loadNameFile(std::string file_name, std::string resource_location = "../Data/Resources/");
-    void loadDistrictFile(std::string file_name, std::string resource_location = "../Data/Resources/");
+    bool loadNameFile(std::string file_name, std::string resource_location = "../Data/Resources/");
+    bool loadDistrictFile(std::string file_name, std::string resource_location = "../Data/Resources/");
 
     // Names
     bool getNamesLoaded();

@@ -19,7 +19,7 @@
 
 
 
-class Passport {
+class Passport{
 // Funcs
 public:
     Passport(const sf::Vector2f& position, const sf::Vector2f& size);
@@ -30,13 +30,17 @@ public:
 
     void draw(sf::RenderWindow &window, Game& game);
 
+
     const sf::View& getDefaultView();
 
     const sf::FloatRect& getViewRect() { return view_rect; }
 
 private:
     bool setupBackground();
-    bool setupText();
+    void setupText();
+    bool setupPhoto();
+
+    void preparePhoto();
 
 
 // Vars
@@ -51,8 +55,6 @@ private:
     // Background
     sf::Texture background_texture;
     sf::Sprite background;
-
-    sf::RectangleShape background_rect;
 
     // Data
     Character* display_character;
@@ -76,7 +78,9 @@ private:
     // Character
     std::shared_ptr<CharacterAssetData> asset_data = nullptr;
     std::unique_ptr<Character> passport_character;
-    sf::Vector2f character_unscaled_pos = { 162, 1152 };
+    sf::RenderTexture photo_texture;
+    sf::Sprite photo_sprite;
+    sf::Vector2f character_unscaled_pos = { 162, 1552 };
     sf::Vector2f character_unscaled_size = { 691, 845 };
 
 

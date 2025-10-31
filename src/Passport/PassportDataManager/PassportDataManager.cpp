@@ -11,12 +11,12 @@ PassportDataManager::PassportDataManager() {
 PassportDataManager::~PassportDataManager() = default;
 
 // --- Setup ---
-void PassportDataManager::loadNameFile(std::string file_name, std::string resource_location) {
+bool PassportDataManager::loadNameFile(std::string file_name, std::string resource_location) {
     names_loaded = false;
 
     std::vector<std::string> file_lines = loadFile(file_name, resource_location);
     if (file_lines.empty()) {
-        return;
+        return names_loaded;
     }
 
     for (const std::string& line : file_lines) {
@@ -33,9 +33,10 @@ void PassportDataManager::loadNameFile(std::string file_name, std::string resour
     }
 
     names_loaded = true;
+    return names_loaded;
 }
 
-void PassportDataManager::loadDistrictFile(std::string file_name, std::string resource_location) {
+bool PassportDataManager::loadDistrictFile(std::string file_name, std::string resource_location) {
     district_loaded = true;
 
     district_names = loadFile(file_name, resource_location);
@@ -44,6 +45,7 @@ void PassportDataManager::loadDistrictFile(std::string file_name, std::string re
         district_loaded = false;
     }
 
+    return district_loaded;
 }
 
 

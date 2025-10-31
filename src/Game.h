@@ -24,7 +24,9 @@ class Game
   const sf::View& getDefaultView();
 
 private:
+    bool loadBackground();
     bool loadFonts();
+    bool loadData();
 
 // Vars
 public:

@@ -21,25 +21,10 @@ Game::~Game()
 
 bool Game::init()
 {
-  // Load Fonts
+
   loadFonts();
-
-  // Load Characters
-  if (!character_creator.LoadCharacterTextures()) {
-    std::cerr << "Failed to load character textures!" << std::endl;
-  }
-
-  // Load Background
-  if (!background_texture.loadFromFile("../Data/Images/Background.png")) {
-    std::cerr << "Failed to load background texture!" << std::endl;
-  } else {
-    background_sprite.setTexture(background_texture);
-    background_sprite.setScale(0.5f, 0.5f);
-  }
-
-  // Load Names in passport data manager
-  passport_data_manager.loadNameFile("nameList.txt");
-  passport_data_manager.loadDistrictFile("districtList.txt");
+  loadData();
+  loadBackground();
 
   // Load passport
   temp_passport = std::make_unique<Passport>(sf::Vector2f(600, 100), sf::Vector2f(PASSPORT_WIDTH, (PASSPORT_WIDTH*PASSPORT_HEIGHT_MULTIPLIER)));
@@ -47,6 +32,7 @@ bool Game::init()
 
   // Init character
   temp_character = std::make_unique<Character>(sf::Vector2f(200, 200), sf::Vector2f(CHARACTER_WIDTH, (CHARACTER_WIDTH * CHARACTER_HEIGHT_MULTIPLIER)));
+
 
   return true;
 }
@@ -59,8 +45,9 @@ void Game::update(float dt)
 void Game::render()
 {
   window.draw(background_sprite);
-  //temp_character->draw(window, *this);
+  temp_character->draw(window, *this);
   temp_passport->draw(window, *this);
+
 }
 
 void Game::mouseClicked(sf::Event event)
@@ -87,6 +74,17 @@ const sf::View& Game::getDefaultView() {
 }
 
 // --- PRIVATE ---
+bool Game::loadBackground() {
+  if (!background_texture.loadFromFile("../Data/Images/Background.png")) {
+    std::cerr << "Failed to load background texture!" << std::endl;
+    return false;
+  }
+
+  background_sprite.setTexture(background_texture);
+  background_sprite.setScale(0.5f, 0.5f);
+  return true;
+}
+
 bool Game::loadFonts() {
   if (!FontManager::getInstance().loadFont("Jua", "Jua/Jua-Regular.ttf")) {
     std::cerr << "Failed to load Jua font!" << std::endl;
@@ -95,6 +93,28 @@ bool Game::loadFonts() {
 
   return true;
 }
+
+bool Game::loadData() {
+  // Load Characters
+  if (!character_creator.LoadCharacterTextures()) {
+    std::cerr << "Failed to load character textures!" << std::endl;
+    return false;
+  }
+
+  // Load Names in passport data manager
+  if (!passport_data_manager.loadNameFile("nameList.txt")) {
+    std::cerr << "Failed to load passport name data!" << std::endl;
+    return false;
+  };
+
+  if (!passport_data_manager.loadDistrictFile("districtList.txt")) {
+    std::cerr << "Failed to load passport district data!" << std::endl;
+    return false;
+  };
+
+  return true;
+}
+
 
 
 

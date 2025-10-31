@@ -8,25 +8,27 @@
 #include "../Manager/FontManager/FontManager.h"
 #include "../Helpers/ScaleTools/ScaleTools.h"
 
-Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size) {
+Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size){
+
     view.setSize(size);
     view.setCenter(size.x / 2.f, size.y / 2.f);
-
-    background_rect.setSize(size);
-    background_rect.setFillColor(sf::Color::Red);
-    background_rect.setOrigin(size / 2.f);
-
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
 
-    setupBackground();
+    if (!setupBackground()) {
+        std::cerr << "Failed to setup background" << std::endl;
+    }
+
     setupText();
+
+    if (!setupPhoto()) {
+        std::cerr << "Failed to setup photo" << std::endl;
+    }
 
     // Character
     passport_character = std::make_unique<Character>(
         ScaleTools::getScaledPosition(character_unscaled_pos, background),
         ScaleTools::getScaledSize(character_unscaled_size, background));
 
-    std::cout << "Scaled Pos: " << ScaleTools::getScaledPosition(character_unscaled_pos, background).x << ", " << ScaleTools::getScaledPosition(character_unscaled_pos, background).y << std::endl;
 }
 
 Passport::~Passport() = default;
@@ -56,6 +58,7 @@ void Passport::initPassport(const CharacterAssetData& data) {
     district_text.setString("District: " + display_district);
 }
 
+
 void Passport::draw(sf::RenderWindow &window, Game &game) {
     sf::Vector2f win_size = game.getDefaultView().getSize();
     view.setViewport({
@@ -66,14 +69,11 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
         });
 
     window.setView(view);
-
-    window.draw(background_rect);
-
     window.draw(background);
 
-    passport_character->loadCharacter(*asset_data);
-    passport_character->drawInPassport(window, *this);
-    //window.setView(view);
+    preparePhoto();
+    window.draw(photo_sprite);
+
 
     window.draw(name_text);
     window.draw(age_text);
@@ -89,6 +89,8 @@ const sf::View& Passport::getDefaultView() {
 
 
 
+
+
 // --- PRIVATE ---
 // Setup
 bool Passport::setupBackground() {
@@ -99,9 +101,10 @@ bool Passport::setupBackground() {
 
     background.setTexture(background_texture);
     ScaleTools::scaleToView(background, view);
+    return true;
 }
 
-bool Passport::setupText() {
+void Passport::setupText() {
     name_text.setFont(FontManager::getInstance().getFont("Jua"));
     name_text.setCharacterSize(ScaleTools::getScaledFont(unscaled_font_size, background));
     name_text.setFillColor(text_colour);
@@ -118,6 +121,27 @@ bool Passport::setupText() {
     district_text.setFillColor(text_colour);
     district_text.setPosition(ScaleTools::getScaledPosition(district_text_pos_unscaled, background));
 }
+
+bool Passport::setupPhoto() {
+    sf::Vector2f photo_size = ScaleTools::getScaledSize(character_unscaled_size, background);
+    if (!photo_texture.create(photo_size.x, photo_size.y)){
+        std::cerr << "Failed to create photo_texture" << std::endl;
+        return false;
+    }
+
+    photo_sprite.setOrigin(0.f, 0.f);
+    photo_sprite.setPosition(ScaleTools::getScaledPosition(character_unscaled_pos, background));
+
+    return true;
+}
+
+void Passport::preparePhoto() {
+    passport_character->loadCharacter(*asset_data);
+    passport_character->drawInPassport(photo_texture);
+    photo_texture.display();
+    photo_sprite.setTexture(photo_texture.getTexture());
+}
+
 
 
 

@@ -6,19 +6,18 @@
 #include "../Game.h"
 #include "../Helpers/ScaleTools/ScaleTools.h"
 
-Character::Character(const sf::Vector2f &position, const sf::Vector2f &size) {
+Character::Character(const sf::Vector2f &position, const sf::Vector2f &size){
     temp_shape.setSize(size);
     temp_shape.setFillColor(sf::Color(200, 180, 150));
     temp_shape.setOrigin(size / 2.f);
 
+
     view.setSize(size);
     view.setCenter(0.f, 0.f);
-    //view.setCenter(position.x + size.x / 2.f, position.y + size.y / 2.f);
 
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
-
-    std::cerr << "View center: " << view.getCenter().x << ", " << view.getCenter().y << std::endl;
-    std::cerr << "View size: " << view.getSize().x << ", " << view.getSize().y << std::endl;
+    view_pos = position;
+    view_size = size;
 }
 
 Character::~Character() = default;
@@ -77,6 +76,8 @@ void Character::loadCharacter(const CharacterAssetData& asset_data) {
     character_loaded = true;
 }
 
+
+
 void Character::draw(sf::RenderWindow &window, Game& game) {
     sf::Vector2f win_size = game.getDefaultView().getSize();
     view.setViewport({
@@ -101,38 +102,21 @@ void Character::draw(sf::RenderWindow &window, Game& game) {
     window.setView(game.getDefaultView());
 }
 
-void Character::drawInPassport(sf::RenderWindow& window, Passport &passport) {
-    sf::Vector2f win_size = static_cast<sf::Vector2f>(window.getSize());
+void Character::drawInPassport(sf::RenderTarget& target) {
 
-    sf::FloatRect passport_rect = passport.getViewRect();
+    target.setView(view);
 
-    sf::FloatRect abs_rect(
-        passport_rect.left + view_rect.left,
-        passport_rect.top + view_rect.top,
-        view_rect.width,
-        view_rect.height);
-
-    view.setViewport({
-        abs_rect.left / win_size.x,
-        abs_rect.top / win_size.y,
-        abs_rect.width / win_size.x,
-        abs_rect.height / win_size.y
-    });
-
-    window.setView(view);
-
-    // Background
-    window.draw(temp_shape);
+    target.draw(temp_shape);
 
     if (character_loaded) {
-        window.draw(body_sprite);
-        window.draw(eye_sprite);
-        window.draw(glasses_sprite);
-        window.draw(hat_sprite);
+        target.draw(body_sprite);
+        target.draw(eye_sprite);
+        target.draw(glasses_sprite);
+        target.draw(hat_sprite);
     }
 
-    window.setView(passport.getDefaultView());
 }
+
 
 
 // --- View ---
