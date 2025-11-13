@@ -75,6 +75,23 @@ void Passport::initPassport(const CharacterAssetData& data)
     district_text.setString("District: " + display_district);
 }
 
+void Passport::openPassport()
+{
+    if (current_state == PassportState::CLOSED) {
+        current_state = PassportState::OPEN;
+    }
+}
+
+sf::FloatRect Passport::getPassportBounds() const {
+    return view_rect;
+}
+
+
+void Passport::setDragPosition(const sf::Vector2f &position, const sf::Vector2u &window_size) {
+    view_rect.left = position.x;
+    view_rect.top = position.y;
+}
+
 
 void Passport::draw(sf::RenderWindow &window, Game &game)
 {

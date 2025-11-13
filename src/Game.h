@@ -19,6 +19,7 @@ class Game
   void update(float dt);
   void render();
   void mouseClicked(sf::Event event);
+  void mouseReleased(sf::Event event);
   void keyPressed(sf::Event event);
 
   const sf::View& getDefaultView();
@@ -27,6 +28,8 @@ private:
     bool loadBackground();
     bool loadFonts();
     bool loadData();
+
+    void dragPassport(Passport* passport);
 
 // Vars
 public:
@@ -49,6 +52,9 @@ private:
   const float PASSPORT_WIDTH = 600.f;
   const float PASSPORT_HEIGHT_MULTIPLIER = 1.391f;
   std::unique_ptr<Passport> temp_passport;
+
+  Passport* passport_drag = nullptr;
+  const float DRAG_OFFSET = 0;
 
 
 

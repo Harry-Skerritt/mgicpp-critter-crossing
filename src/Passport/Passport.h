@@ -32,6 +32,12 @@ public:
     void setPassportState(PassportState state);
     PassportState getPassportState() const;
 
+    void openPassport();
+
+    // 'Sprite' funcs
+    sf::FloatRect getPassportBounds() const;
+    void setDragPosition(const sf::Vector2f& position, const sf::Vector2u& window_size);
+
     void draw(sf::RenderWindow &window, Game& game);
 
 

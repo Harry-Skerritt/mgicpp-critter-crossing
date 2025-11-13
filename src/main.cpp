@@ -45,6 +45,9 @@ int main()
       if (event.type == sf::Event::MouseButtonPressed)
         game.mouseClicked(event);
 
+      if (event.type == sf::Event::MouseButtonReleased)
+        game.mouseReleased(event);
+
       if (event.type == sf::Event::KeyPressed)
         game.keyPressed(event);
     }

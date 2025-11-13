@@ -26,10 +26,10 @@ Character::~Character() = default;
 // --- Functionality ---
 void Character::loadCharacter(const CharacterAssetData& asset_data)
 {
-    if (&asset_data == nullptr)
-    {
+    if (&asset_data == nullptr) {
         return;
     }
+
     character_loaded = false;
     CreatureType type = asset_data.creature_type;
 

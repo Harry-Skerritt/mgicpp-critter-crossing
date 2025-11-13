@@ -40,6 +40,8 @@ bool Game::init()
 void Game::update(float dt)
 {
   temp_character->loadCharacter(*character_data);
+
+  dragPassport(passport_drag);
 }
 
 void Game::render()
@@ -48,13 +50,37 @@ void Game::render()
   //temp_character->draw(window, *this);
   temp_passport->draw(window, *this);
 
+  sf::RectangleShape shape;
+  sf::FloatRect pb = temp_passport->getPassportBounds();
+  shape.setSize(sf::Vector2f(pb.width, pb.height));
+  shape.setPosition(sf::Vector2f(pb.left, pb.top));
+  shape.setFillColor(sf::Color::White);
+  //window.draw(shape);
+
 }
 
 void Game::mouseClicked(sf::Event event)
 {
-  sf::Vector2i click = sf::Mouse::getPosition(window);
+  if (event.mouseButton.button == sf::Mouse::Left)
+  {
+    sf::Vector2f mouse_pos_pixel = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+    if (temp_passport->getPassportBounds().contains(mouse_pos_pixel))
+    {
+      passport_drag = temp_passport.get();
+    }
+  } else if (event.mouseButton.button == sf::Mouse::Right)
+  {
+
+  }
 
 }
+
+void Game::mouseReleased(sf::Event event)
+{
+  passport_drag = nullptr;
+}
+
 
 void Game::keyPressed(sf::Event event)
 {
@@ -65,6 +91,11 @@ void Game::keyPressed(sf::Event event)
     {
       character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
       temp_passport->initPassport(*character_data);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+    {
+      temp_passport->openPassport();
     }
   }
 
@@ -117,6 +148,21 @@ bool Game::loadData() {
 
   return true;
 }
+
+void Game::dragPassport(Passport* passport)
+{
+  if (passport != nullptr)
+  {
+    sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+    sf::Vector2f mouse_pos_f = static_cast<sf::Vector2f>(mouse_pos);
+
+    sf::Vector2f drag_pos = sf::Vector2f(mouse_pos_f.x - DRAG_OFFSET, mouse_pos_f.y - DRAG_OFFSET);
+    passport->setDragPosition(drag_pos, window.getSize());
+
+
+  }
+}
+
 
 
 
