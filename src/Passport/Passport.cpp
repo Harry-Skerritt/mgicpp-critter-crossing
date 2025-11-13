@@ -8,19 +8,22 @@
 #include "../Manager/FontManager/FontManager.h"
 #include "../Helpers/ScaleTools/ScaleTools.h"
 
-Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size){
+Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size)
+{
 
     view.setSize(size);
     view.setCenter(size.x / 2.f, size.y / 2.f);
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
 
-    if (!setupBackground()) {
+    if (!setupBackground())
+    {
         std::cerr << "Failed to setup background" << std::endl;
     }
 
     setupText();
 
-    if (!setupPhoto()) {
+    if (!setupPhoto())
+    {
         std::cerr << "Failed to setup photo" << std::endl;
     }
 
@@ -34,24 +37,29 @@ Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size){
 Passport::~Passport() = default;
 
 // --- Setup ---
-void Passport::setDataManager(PassportDataManager *manager) {
+void Passport::setDataManager(PassportDataManager *manager)
+{
     data_manager = manager;
 }
 
 // --- State Manipulators ---
-void Passport::setPassportState(const PassportState state) {
+void Passport::setPassportState(const PassportState state)
+{
     current_state = state;
 }
 
-PassportState Passport::getPassportState() const {
+PassportState Passport::getPassportState() const
+{
     return current_state;
 }
 
 // --- Functionality ---
-void Passport::initPassport(const CharacterAssetData& data) {
+void Passport::initPassport(const CharacterAssetData& data)
+{
     asset_data = std::make_unique<CharacterAssetData>(data);
 
-    if (asset_data == nullptr) {
+    if (asset_data == nullptr)
+    {
         // Gen new data
         std::cerr << "Passport::initPassport: asset data is null" << std::endl;
         asset_data = nullptr;
@@ -68,7 +76,8 @@ void Passport::initPassport(const CharacterAssetData& data) {
 }
 
 
-void Passport::draw(sf::RenderWindow &window, Game &game) {
+void Passport::draw(sf::RenderWindow &window, Game &game)
+{
     sf::Vector2f win_size = game.getDefaultView().getSize();
     view.setViewport({
         view_rect.left / win_size.x,
@@ -79,10 +88,12 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
 
     window.setView(view);
 
-    if (current_state == PassportState::CLOSED) {
-        window.draw(photo_sprite);
+    if (current_state == PassportState::CLOSED)
+    {
+        window.draw(closed_passport_sprite);
     }
-    else if (current_state == PassportState::OPEN) {
+    else if (current_state == PassportState::OPEN)
+    {
         window.draw(background);
 
         preparePhoto();
@@ -102,9 +113,11 @@ void Passport::draw(sf::RenderWindow &window, Game &game) {
 
 // --- PRIVATE ---
 // Setup
-bool Passport::setupBackground() {
+bool Passport::setupBackground()
+{
     // Open Background
-    if (!background_texture.loadFromFile("../Data/Images/Passport.png")) {
+    if (!background_texture.loadFromFile("../Data/Images/Passport.png"))
+    {
         std::cerr << "Passport: Failed to load background texture" << std::endl;
         return false;
     }
@@ -113,7 +126,8 @@ bool Passport::setupBackground() {
     ScaleTools::scaleToView(background, view);
 
     // Closed Background
-    if (!closed_passport_texture.loadFromFile("../Data/Images/ClosedPassport.png")) {
+    if (!closed_passport_texture.loadFromFile("../Data/Images/ClosedPassport.png"))
+    {
         std::cerr << "Passport: Failed to load closed passport texture" << std::endl;
         return false;
     }
@@ -122,7 +136,8 @@ bool Passport::setupBackground() {
     return true;
 }
 
-void Passport::setupText() {
+void Passport::setupText()
+{
     name_text.setFont(FontManager::getInstance().getFont("Jua"));
     name_text.setCharacterSize(ScaleTools::getScaledFont(unscaled_font_size, background));
     name_text.setFillColor(text_colour);
@@ -140,9 +155,11 @@ void Passport::setupText() {
     district_text.setPosition(ScaleTools::getScaledPosition(district_text_pos_unscaled, background));
 }
 
-bool Passport::setupPhoto() {
+bool Passport::setupPhoto()
+{
     sf::Vector2f photo_size = ScaleTools::getScaledSize(character_unscaled_size, background);
-    if (!photo_texture.create(photo_size.x, photo_size.y)){
+    if (!photo_texture.create(photo_size.x, photo_size.y))
+    {
         std::cerr << "Failed to create photo_texture" << std::endl;
         return false;
     }
@@ -153,8 +170,10 @@ bool Passport::setupPhoto() {
     return true;
 }
 
-void Passport::preparePhoto() {
+void Passport::preparePhoto()
+{
     passport_character->loadCharacter(*asset_data);
+    photo_texture.clear(sf::Color::Transparent);
     passport_character->drawInPassport(photo_texture);
     photo_texture.display();
     photo_sprite.setTexture(photo_texture.getTexture());

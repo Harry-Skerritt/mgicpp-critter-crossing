@@ -6,9 +6,10 @@
 #include "../Game.h"
 #include "../Helpers/ScaleTools/ScaleTools.h"
 
-Character::Character(const sf::Vector2f &position, const sf::Vector2f &size){
+Character::Character(const sf::Vector2f &position, const sf::Vector2f &size)
+{
     temp_shape.setSize(size);
-    temp_shape.setFillColor(sf::Color(200, 180, 150));
+    temp_shape.setFillColor(sf::Color(200, 180, 150, 0));
     temp_shape.setOrigin(size / 2.f);
 
 
@@ -23,8 +24,10 @@ Character::Character(const sf::Vector2f &position, const sf::Vector2f &size){
 Character::~Character() = default;
 
 // --- Functionality ---
-void Character::loadCharacter(const CharacterAssetData& asset_data) {
-    if (&asset_data == nullptr) {
+void Character::loadCharacter(const CharacterAssetData& asset_data)
+{
+    if (&asset_data == nullptr)
+    {
         return;
     }
     character_loaded = false;
@@ -36,7 +39,8 @@ void Character::loadCharacter(const CharacterAssetData& asset_data) {
     glasses_texture = asset_data.glasses_texture;
     hat_texture = asset_data.hat_texture;
 
-    if (body_texture == nullptr || eye_texture == nullptr || glasses_texture == nullptr || hat_texture == nullptr) {
+    if (body_texture == nullptr || eye_texture == nullptr || glasses_texture == nullptr || hat_texture == nullptr)
+    {
         return;
     }
 
@@ -67,9 +71,11 @@ void Character::loadCharacter(const CharacterAssetData& asset_data) {
     hat_sprite.setColor(sf::Color::White);
 
     // Get a random colour for the hat if the hat is colourable
-    if (asset_data.hat_colour != nullptr) {
+    if (asset_data.hat_colour != nullptr)
+    {
         hat_sprite.setColor(*asset_data.hat_colour);
-    } else {
+    } else
+    {
         hat_sprite.setColor(sf::Color::White);
     }
 
@@ -78,7 +84,8 @@ void Character::loadCharacter(const CharacterAssetData& asset_data) {
 
 
 
-void Character::draw(sf::RenderWindow &window, Game& game) {
+void Character::draw(sf::RenderWindow &window, Game& game)
+{
     sf::Vector2f win_size = game.getDefaultView().getSize();
     view.setViewport({
         view_rect.left / win_size.x,
@@ -92,7 +99,8 @@ void Character::draw(sf::RenderWindow &window, Game& game) {
    // Background
     window.draw(temp_shape);
 
-    if (character_loaded) {
+    if (character_loaded)
+    {
         window.draw(body_sprite);
         window.draw(eye_sprite);
         window.draw(glasses_sprite);
@@ -102,13 +110,15 @@ void Character::draw(sf::RenderWindow &window, Game& game) {
     window.setView(game.getDefaultView());
 }
 
-void Character::drawInPassport(sf::RenderTarget& target) {
+void Character::drawInPassport(sf::RenderTarget& target)
+{
 
     target.setView(view);
 
     target.draw(temp_shape);
 
-    if (character_loaded) {
+    if (character_loaded)
+    {
         target.draw(body_sprite);
         target.draw(eye_sprite);
         target.draw(glasses_sprite);
@@ -120,15 +130,18 @@ void Character::drawInPassport(sf::RenderTarget& target) {
 
 
 // --- View ---
-void Character::setViewCentre(const sf::Vector2f &centre) {
+void Character::setViewCentre(const sf::Vector2f &centre)
+{
     view.setCenter(centre);
 }
 
 
 // Debug
 // Todo: Remove before building
-std::string Character::creatureTypeToString(CreatureType type) {
-    switch (type) {
+std::string Character::creatureTypeToString(CreatureType type)
+{
+    switch (type)
+    {
         case(CreatureType::BEAR):
             return "Bear";
         case(CreatureType::CHICKEN):

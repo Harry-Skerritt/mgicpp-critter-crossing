@@ -5,7 +5,8 @@ CharacterCreator::CharacterCreator() { }
 CharacterCreator::~CharacterCreator() = default;
 
 // --- Setup ---
-bool CharacterCreator::LoadCharacterTextures() {
+bool CharacterCreator::LoadCharacterTextures()
+{
 
     // Add Bodies
     if (!AddTexture(TextureType::BODY, "Bodies/BearBody.png", 1.0f, false, CreatureType::BEAR)) return false;
@@ -50,7 +51,8 @@ bool CharacterCreator::LoadCharacterTextures() {
 }
 
 // --- Functionality
-CharacterAssetData CharacterCreator::ChooseCharacter() {
+CharacterAssetData CharacterCreator::ChooseCharacter()
+{
     CharacterAssetData asset_data;
 
     asset_data.body_texture = GetRandomTexture(TextureType::BODY).texture;
@@ -67,21 +69,25 @@ CharacterAssetData CharacterCreator::ChooseCharacter() {
 }
 
 // --- Getters ---
-CreatureType CharacterCreator::getCreatureType() {
+CreatureType CharacterCreator::getCreatureType()
+{
     return last_creature_type;
 }
 
 // --- PRIVATE ---
 // Textures
-bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, bool canBeColoured, CreatureType creature) {
+bool CharacterCreator::AddTexture(TextureType type, std::string fileLoc, float weight, bool canBeColoured, CreatureType creature)
+{
 
-    std::shared_ptr<sf::Texture> temp_texture = std::make_shared<sf::Texture>() ;
-    if (!temp_texture->loadFromFile(RESOURCES_LOC + fileLoc)) {
+    std::shared_ptr<sf::Texture> temp_texture = std::make_shared<sf::Texture>();
+    if (!temp_texture->loadFromFile(RESOURCES_LOC + fileLoc))
+    {
         std::cerr << "CharacterCreator: Error loading texture: " << fileLoc << std::endl;
         return false;
     }
 
-    if (weight < 0.0f || weight > 1.0f) {
+    if (weight < 0.0f || weight > 1.0f)
+    {
         std::cerr << "CharacterCreator: Weight must be between 0.0 and 1.0" << std::endl;
         return false;
     }
@@ -96,7 +102,8 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 {
     TextureProperties properties{};
     const std::vector<TextureEntry>& entries = textures[type];
-    if (entries.empty()) {
+    if (entries.empty())
+    {
         std::cerr << "CharacterCreator: No textures available" << std::endl;
         return properties;
     }
@@ -105,12 +112,14 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 
     // Get the total weight
     float total_weight = 0.0f;
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; ++i)
+    {
         total_weight += entries[i].weight;
     }
 
     // Check the weight isn't 0
-    if (total_weight <= 0.0f) {
+    if (total_weight <= 0.0f)
+    {
         std::cout << "CharacterCreator: Total weight is 0.0" << std::endl;
         return properties;
     }
@@ -119,19 +128,25 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
     int attempts = 0;
 
     // Ensure the same animal isn't picked twice in a row
-    while (!chosen && attempts < 10) {
+    while (!chosen && attempts < 10)
+    {
         float random = static_cast<float>(std::rand())/ RAND_MAX * total_weight;
 
         // Find the chosen texture
         float cumulative = 0.0f;
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
+        {
             cumulative += entries[i].weight;
-            if (random <= cumulative) {
-                if (type == TextureType::BODY) {
-                    if (entries[i].creatureType != last_creature_type || entries.size() == 1) {
+            if (random <= cumulative)
+            {
+                if (type == TextureType::BODY)
+                {
+                    if (entries[i].creatureType != last_creature_type || entries.size() == 1)
+                    {
                         chosen = &entries[i];
                     }
-                } else {
+                } else
+                {
                     chosen = &entries[i];
                 }
                 break;
@@ -144,15 +159,18 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
     if (!chosen)
         chosen = &entries.front();
 
-    if (type == TextureType::BODY) {
+    if (type == TextureType::BODY)
+    {
         last_creature_type = chosen->creatureType;
     }
 
     properties.texture = chosen->texture;
 
-    if (chosen->canBeColoured) {
+    if (chosen->canBeColoured)
+    {
         properties.texture_colour = getRandomColour();
-    } else {
+    } else
+    {
         properties.texture_colour = nullptr;
     }
 
@@ -161,12 +179,15 @@ TextureProperties CharacterCreator::GetRandomTexture(TextureType type)
 
 
 // Helpers
-int CharacterCreator::GetTextureCount(TextureType type) {
+int CharacterCreator::GetTextureCount(TextureType type)
+{
     return textures[type].size();
 }
 
-void CharacterCreator::GetTotalTextureCount() {
-    for (int i = 0; i < static_cast<int>(TextureType::COUNT); ++i) {
+void CharacterCreator::GetTotalTextureCount()
+{
+    for (int i = 0; i < static_cast<int>(TextureType::COUNT); ++i)
+    {
         TextureType type = static_cast<TextureType>(i);
         int count = GetTextureCount(type);
 
@@ -174,7 +195,8 @@ void CharacterCreator::GetTotalTextureCount() {
     }
 }
 
-sf::Color* CharacterCreator::getRandomColour() {
+sf::Color* CharacterCreator::getRandomColour()
+{
     sf::Color* colour = new sf::Color(
         std::rand() % 256,
             std::rand() % 256,

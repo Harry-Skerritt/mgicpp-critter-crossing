@@ -45,7 +45,7 @@ void Game::update(float dt)
 void Game::render()
 {
   window.draw(background_sprite);
-  temp_character->draw(window, *this);
+  //temp_character->draw(window, *this);
   temp_passport->draw(window, *this);
 
 }
@@ -59,12 +59,15 @@ void Game::mouseClicked(sf::Event event)
 void Game::keyPressed(sf::Event event)
 {
 
-  if (event.type == sf::Event::KeyPressed) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+  if (event.type == sf::Event::KeyPressed)
+  {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    {
       character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
       temp_passport->initPassport(*character_data);
     }
   }
+
 }
 
 
