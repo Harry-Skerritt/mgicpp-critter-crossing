@@ -9,6 +9,8 @@
 #include "Characters/CharacterCreator/CharacterCreator.h"
 #include "Passport/Passport.h"
 
+enum class GameState { MENU, PLAY };
+
 class Game
 {
  // Funcs
@@ -28,6 +30,7 @@ private:
     bool loadBackground();
     bool loadFonts();
     bool loadData();
+    bool loadSprites();
 
     void dragPassport(Passport* passport);
 
@@ -38,21 +41,36 @@ private:
   sf::RenderWindow& window;
   sf::View game_view;
 
+  GameState game_state = GameState::PLAY; // Todo: Change to Menu and add menu
+
+  // Background
   sf::Texture background_texture;
   sf::Sprite background_sprite;
 
+  // Desk
+  sf::Texture desk_texture;
+  sf::Sprite desk_sprite;
+  sf::Vector2f desk_unscaled_size = { 470, 1613 };
 
+  // Passport Slot
+  sf::Texture passport_slot_texture;
+  sf::Sprite passport_slot_sprite;
+  sf::Vector2f passport_slot_unscaled_size = { 2198, 89 };
+
+  // Characters
   CharacterCreator character_creator;
   std::shared_ptr<CharacterAssetData> character_data = nullptr;
   const float CHARACTER_WIDTH = 300.f;
   const float CHARACTER_HEIGHT_MULTIPLIER = 1.09f;
   std::unique_ptr<Character> temp_character;
 
+  // Passport
   PassportDataManager passport_data_manager;
   const float PASSPORT_WIDTH = 600.f;
   const float PASSPORT_HEIGHT_MULTIPLIER = 1.391f;
   std::unique_ptr<Passport> temp_passport;
 
+  // Passport Dragging
   Passport* passport_drag = nullptr;
   const float DRAG_OFFSET = 0;
 

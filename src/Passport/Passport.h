@@ -20,6 +20,8 @@
 
 enum class PassportState { OPEN, CLOSED };
 
+enum class PassportStamp { NONE, APPROVE, REJECT };
+
 class Passport{
 // Funcs
 public:
@@ -55,7 +57,9 @@ public:
 private:
     PassportDataManager* data_manager;
 
+    // Enum States
     PassportState current_state = PassportState::CLOSED;
+    PassportStamp current_stamp_state = PassportStamp::NONE;
 
     // Closed State
     sf::Texture closed_passport_texture;

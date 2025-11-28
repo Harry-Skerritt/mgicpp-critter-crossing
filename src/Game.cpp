@@ -1,5 +1,8 @@
 
 #include "Game.h"
+
+#include "Helpers/ScaleTools/ScaleTools.h"
+
 #include <iostream>
 
 #include "Manager/FontManager/FontManager.h"
@@ -25,6 +28,7 @@ bool Game::init()
   loadFonts();
   loadData();
   loadBackground();
+  loadSprites();
 
   // Load passport
   temp_passport = std::make_unique<Passport>(sf::Vector2f(600, 100), sf::Vector2f(PASSPORT_WIDTH, (PASSPORT_WIDTH*PASSPORT_HEIGHT_MULTIPLIER)));
@@ -39,24 +43,26 @@ bool Game::init()
 
 void Game::update(float dt)
 {
-  temp_character->loadCharacter(*character_data);
+  // Handle Gameplay
+  if (game_state == GameState::PLAY) {
+    temp_character->loadCharacter(*character_data);
 
-  dragPassport(passport_drag);
+    dragPassport(passport_drag);
+  }
+
 }
 
 void Game::render()
 {
-  window.draw(background_sprite);
-  //temp_character->draw(window, *this);
-  temp_passport->draw(window, *this);
+  // Handle Gameplay
+  if (game_state == GameState::PLAY) {
+    window.draw(background_sprite);
+    window.draw(desk_sprite);
+    window.draw(passport_slot_sprite);
 
-  sf::RectangleShape shape;
-  sf::FloatRect pb = temp_passport->getPassportBounds();
-  shape.setSize(sf::Vector2f(pb.width, pb.height));
-  shape.setPosition(sf::Vector2f(pb.left, pb.top));
-  shape.setFillColor(sf::Color::White);
-  //window.draw(shape);
-
+    temp_character->draw(window, *this);
+    temp_passport->draw(window, *this);
+  }
 }
 
 void Game::mouseClicked(sf::Event event)
@@ -145,6 +151,27 @@ bool Game::loadData() {
     std::cerr << "Failed to load passport district data!" << std::endl;
     return false;
   };
+
+  return true;
+}
+
+bool Game::loadSprites() {
+  // Load Desk
+  if (!desk_texture.loadFromFile("../Data/Images/Planks/TablePlank.png")) {
+    std::cout << "Desk texture failed to load!" << std::endl;
+    return false;
+  }
+  desk_sprite.setTexture(desk_texture);
+  desk_sprite.setScale(0.5f, 0.5f);
+  desk_sprite.setPosition(ScaleTools::getScaledPosition(desk_unscaled_size, background_sprite));
+
+  if (!passport_slot_texture.loadFromFile("../Data/Images/PassportSlot.png")) {
+    std::cout << "Passport slot texture failed to load!" << std::endl;
+    return false;
+  }
+  passport_slot_sprite.setTexture(passport_slot_texture);
+  passport_slot_sprite.setScale(0.5f, 0.5f);
+  passport_slot_sprite.setPosition(ScaleTools::getScaledPosition(passport_slot_unscaled_size, background_sprite));
 
   return true;
 }
