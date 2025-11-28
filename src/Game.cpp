@@ -37,6 +37,8 @@ bool Game::init()
   // Init character
   temp_character = std::make_unique<Character>(sf::Vector2f(200, 200), sf::Vector2f(CHARACTER_WIDTH, (CHARACTER_WIDTH * CHARACTER_HEIGHT_MULTIPLIER)));
 
+  // Passport Stamp
+  passport_stamp = std::make_shared<PassportStamp>();
 
   return true;
 }
@@ -44,10 +46,19 @@ bool Game::init()
 void Game::update(float dt)
 {
   // Handle Gameplay
-  if (game_state == GameState::PLAY) {
+  if (game_state == GameState::PLAY)
+  {
     temp_character->loadCharacter(*character_data);
 
     dragPassport(passport_drag);
+
+    if (passport_stamp_visible)
+    {
+      sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+      sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
+      passport_stamp->handleMouseHover(mouse_pos_coords);
+      //std::cout << "Mouse X: " << mouse_pos_coords.x << " Y: " << mouse_pos_coords.y << std::endl;
+    }
   }
 
 }
@@ -62,22 +73,50 @@ void Game::render()
 
     temp_character->draw(window, *this);
     temp_passport->draw(window, *this);
+
+    passport_stamp->draw(window);
+
+    if (draw_mouse_coords)
+    {
+      sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+      sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
+
+      sf::RectangleShape rect;
+      rect.setFillColor(sf::Color::Yellow);
+      rect.setSize({ 12, 12 });
+      rect.setPosition(mouse_pos_coords);
+      window.draw(rect);
+
+      sf::RectangleShape rect1;
+      rect1.setFillColor(sf::Color::Magenta);
+      rect1.setSize({ 10, 10 });
+      rect1.setPosition(static_cast<sf::Vector2f>(mouse_pos));
+      window.draw(rect1);
+    }
+
   }
 }
 
 void Game::mouseClicked(sf::Event event)
 {
+  sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+  sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
+
   if (event.mouseButton.button == sf::Mouse::Left)
   {
-    sf::Vector2f mouse_pos_pixel = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
-    if (temp_passport->getPassportBounds().contains(mouse_pos_pixel))
+    if (temp_passport->getPassportBounds().contains(mouse_pos_coords))
     {
       passport_drag = temp_passport.get();
     }
-  } else if (event.mouseButton.button == sf::Mouse::Right)
+    if (passport_stamp_visible)
+    {
+      passport_stamp->onMouseClick();
+    }
+  }
+  else if (event.mouseButton.button == sf::Mouse::Right)
   {
-
+    passport_stamp_visible = !passport_stamp->getVisible();
+    passport_stamp->showStampUI(passport_stamp_visible, mouse_pos_coords, game_view.getSize());
   }
 
 }
@@ -131,6 +170,11 @@ bool Game::loadFonts() {
     return false;
   }
 
+  if (!FontManager::getInstance().loadFont("Passport", "Passport/Passport-Regular.ttf")) {
+    std::cerr << "Failed to load Passport font!" << std::endl;
+    return false;
+  }
+
   return true;
 }
 
@@ -157,7 +201,8 @@ bool Game::loadData() {
 
 bool Game::loadSprites() {
   // Load Desk
-  if (!desk_texture.loadFromFile("../Data/Images/Planks/TablePlank.png")) {
+  if (!desk_texture.loadFromFile("../Data/Images/Planks/TablePlank.png"))
+  {
     std::cout << "Desk texture failed to load!" << std::endl;
     return false;
   }
@@ -165,7 +210,8 @@ bool Game::loadSprites() {
   desk_sprite.setScale(0.5f, 0.5f);
   desk_sprite.setPosition(ScaleTools::getScaledPosition(desk_unscaled_size, background_sprite));
 
-  if (!passport_slot_texture.loadFromFile("../Data/Images/PassportSlot.png")) {
+  if (!passport_slot_texture.loadFromFile("../Data/Images/PassportSlot.png"))
+  {
     std::cout << "Passport slot texture failed to load!" << std::endl;
     return false;
   }
@@ -181,9 +227,9 @@ void Game::dragPassport(Passport* passport)
   if (passport != nullptr)
   {
     sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-    sf::Vector2f mouse_pos_f = static_cast<sf::Vector2f>(mouse_pos);
+    sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
 
-    sf::Vector2f drag_pos = sf::Vector2f(mouse_pos_f.x - DRAG_OFFSET, mouse_pos_f.y - DRAG_OFFSET);
+    sf::Vector2f drag_pos = sf::Vector2f(mouse_pos_coords.x - DRAG_OFFSET, mouse_pos_coords.y - DRAG_OFFSET);
     passport->setDragPosition(drag_pos, window.getSize());
 
 

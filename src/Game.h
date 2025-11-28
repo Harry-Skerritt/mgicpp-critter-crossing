@@ -8,6 +8,7 @@
 #include "Characters/Character.h"
 #include "Characters/CharacterCreator/CharacterCreator.h"
 #include "Passport/Passport.h"
+#include "Passport/PassportStamp/PassportStamp.h"
 
 enum class GameState { MENU, PLAY };
 
@@ -38,6 +39,9 @@ private:
 public:
 
 private:
+  // Debug
+  bool draw_mouse_coords = false;
+
   sf::RenderWindow& window;
   sf::View game_view;
 
@@ -57,6 +61,10 @@ private:
   sf::Sprite passport_slot_sprite;
   sf::Vector2f passport_slot_unscaled_size = { 2198, 89 };
 
+  // Stamp Buttons
+  std::shared_ptr<PassportStamp> passport_stamp;
+  bool passport_stamp_visible = false;
+
   // Characters
   CharacterCreator character_creator;
   std::shared_ptr<CharacterAssetData> character_data = nullptr;
@@ -72,7 +80,7 @@ private:
 
   // Passport Dragging
   Passport* passport_drag = nullptr;
-  const float DRAG_OFFSET = 0;
+  const float DRAG_OFFSET = 40;
 
 
 
