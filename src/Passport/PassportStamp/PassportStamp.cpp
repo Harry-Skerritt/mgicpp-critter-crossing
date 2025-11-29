@@ -19,6 +19,9 @@ void PassportStamp::init()
 
 }
 
+void PassportStamp::setPassport(Passport *passport) {
+   this->passport = passport;
+}
 
 void PassportStamp::handleMouseHover(sf::Vector2f mouse_pos)
 {
@@ -52,12 +55,24 @@ void PassportStamp::onMouseClick() {
    {
       std::cout << "Approve Passport" << std::endl;
       is_visible = false;
+      if (passport != nullptr)
+      {
+         //passport->setPassportState(PassportState::CLOSED);
+         passport->setPassportStamp(PassportStampValue::APPROVE);
+         passport->setCanBeDragged(true);
+      }
    }
 
    if (deny_hovered)
    {
       std::cout << "Deny Passport" << std::endl;
       is_visible = false;
+      if (passport != nullptr)
+      {
+         //passport->setPassportState(PassportState::CLOSED);
+         passport->setPassportStamp(PassportStampValue::REJECT);
+         passport->setCanBeDragged(true);
+      }
    }
 }
 
@@ -105,7 +120,6 @@ void PassportStamp::showStampUI(bool visible, sf::Vector2f mouse_pos, sf::Vector
 }
 
 // --- PRIVATE ---
-
 bool PassportStamp::setupTextures() {
    // Background
    if (!button_background_texture.loadFromFile("../Data/Images/ButtonBackground.png"))

@@ -32,6 +32,8 @@ Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size)
         ScaleTools::getScaledPosition(character_unscaled_pos, background),
         ScaleTools::getScaledSize(character_unscaled_size, background));
 
+    stamps_loaded = loadStamps();
+
 }
 
 Passport::~Passport() = default;
@@ -52,6 +54,29 @@ PassportState Passport::getPassportState() const
 {
     return current_state;
 }
+
+void Passport::setPassportStamp(PassportStampValue value)
+{
+    current_stamp_state = value;
+
+    if (current_stamp_state == PassportStampValue::APPROVE)
+    {
+        stamp_sprite.setTexture(approve_stamp_texture);
+    }
+
+    if (current_stamp_state == PassportStampValue::REJECT)
+    {
+        stamp_sprite.setTexture(deny_stamp_texture);
+    }
+
+    positionStamp();
+}
+
+PassportStampValue Passport::getPassportStamp() const
+{
+    return current_stamp_state;
+}
+
 
 // --- Functionality ---
 void Passport::initPassport(const CharacterAssetData& data)
@@ -86,8 +111,11 @@ sf::FloatRect Passport::getPassportBounds() const {
     return view_rect;
 }
 
+sf::Vector2f Passport::getPassportPosition() const {
+    return sf::Vector2f(view_rect.left, view_rect.top);
+}
 
-void Passport::setDragPosition(const sf::Vector2f &position, const sf::Vector2u &window_size) {
+void Passport::setDragPosition(const sf::Vector2f &position) {
     view_rect.left = position.x;
     view_rect.top = position.y;
 }
@@ -120,6 +148,9 @@ void Passport::draw(sf::RenderWindow &window, Game &game)
         window.draw(name_text);
         window.draw(age_text);
         window.draw(district_text);
+
+        window.draw(stamp_sprite);
+
     }
 
 
@@ -195,6 +226,30 @@ void Passport::preparePhoto()
     photo_texture.display();
     photo_sprite.setTexture(photo_texture.getTexture());
 }
+
+bool Passport::loadStamps()
+{
+    if (!approve_stamp_texture.loadFromFile("../Data/Images/ApproveStamp.png"))
+    {
+        std::cerr << "Passport: Failed to load approve stamp texture" << std::endl;
+        return false;
+    }
+
+    if (!deny_stamp_texture.loadFromFile("../Data/Images/DenyStamp.png"))
+    {
+        std::cerr << "Passport: Failed to load deny stamp texture" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+void Passport::positionStamp() {
+    stamp_sprite.setScale(0.5f, 0.5f);
+    stamp_sprite.setPosition(ScaleTools::getScaledPosition(stamp_pos_unscaled, background));
+}
+
+
 
 
 

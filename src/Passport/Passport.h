@@ -34,11 +34,18 @@ public:
     void setPassportState(PassportState state);
     PassportState getPassportState() const;
 
+    void setPassportStamp(PassportStampValue value);
+    PassportStampValue getPassportStamp() const;
+
+    void setCanBeDragged(bool value) { can_be_dragged = value; }
+    bool getCanBeDragged() const { return can_be_dragged; }
+
     void openPassport();
 
     // 'Sprite' funcs
     sf::FloatRect getPassportBounds() const;
-    void setDragPosition(const sf::Vector2f& position, const sf::Vector2u& window_size);
+    void setDragPosition(const sf::Vector2f& position);
+    sf::Vector2f getPassportPosition() const;
 
     void draw(sf::RenderWindow &window, Game& game);
 
@@ -48,8 +55,9 @@ private:
     bool setupBackground();
     void setupText();
     bool setupPhoto();
-
     void preparePhoto();
+    bool loadStamps();
+    void positionStamp();
 
 
 // Vars
@@ -100,7 +108,16 @@ private:
     sf::Vector2f character_unscaled_pos = { 162, 1552 };
     sf::Vector2f character_unscaled_size = { 691, 845 };
 
+    // Stamp
+    sf::Texture approve_stamp_texture;
+    sf::Texture deny_stamp_texture;
+    sf::Sprite stamp_sprite;
+    bool stamps_loaded = false;
+    sf::Vector2f stamp_pos_unscaled = { 513, 1300 };
+    sf::Vector2f stamp_size_unscaled = { 573, 573 };
 
+    // Dragging
+    bool can_be_dragged = true;
 
 };
 

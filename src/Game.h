@@ -8,6 +8,7 @@
 #include "Characters/Character.h"
 #include "Characters/CharacterCreator/CharacterCreator.h"
 #include "Passport/Passport.h"
+#include "Passport/PassportArea/PassportArea.h"
 #include "Passport/PassportStamp/PassportStamp.h"
 
 enum class GameState { MENU, PLAY };
@@ -57,9 +58,7 @@ private:
   sf::Vector2f desk_unscaled_size = { 470, 1613 };
 
   // Passport Slot
-  sf::Texture passport_slot_texture;
-  sf::Sprite passport_slot_sprite;
-  sf::Vector2f passport_slot_unscaled_size = { 2198, 89 };
+  PassportArea passport_area;
 
   // Stamp Buttons
   std::shared_ptr<PassportStamp> passport_stamp;

@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Manager/FontManager/FontManager.h"
+#include "../Passport.h"
 
 
 
@@ -27,6 +28,8 @@ public:
 
   void showStampUI(bool visible, sf::Vector2f mouse_pos, sf::Vector2f window_size);
   bool getVisible() { return is_visible; }
+
+  void setPassport(Passport* passport);
 
 private:
   bool setupTextures();
@@ -79,6 +82,8 @@ private:
   sf::Vector2f deny_text_unscaled_position = { 398, 479 };
 
   const float BORDER_MARGIN = 40;
+
+  Passport* passport = nullptr;
 
 
 };

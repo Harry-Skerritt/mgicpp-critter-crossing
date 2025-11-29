@@ -31,6 +31,8 @@ set(SOURCE_FILES
         src/Passport/PassportDataManager/PassportDataManager.cpp
         src/Passport/PassportStamp/PassportStamp.h
         src/Passport/PassportStamp/PassportStamp.cpp
+        src/Passport/PassportArea/PassportArea.h
+        src/Passport/PassportArea/PassportArea.cpp
         src/Manager/FontManager/FontManager.h
         src/Manager/FontManager/FontManager.cpp
         src/Helpers/ScaleTools/ScaleTools.h
