@@ -45,16 +45,6 @@ void Passport::setDataManager(PassportDataManager *manager)
 }
 
 // --- State Manipulators ---
-void Passport::setPassportState(const PassportState state)
-{
-    current_state = state;
-}
-
-PassportState Passport::getPassportState() const
-{
-    return current_state;
-}
-
 void Passport::setPassportStamp(PassportStampValue value)
 {
     current_stamp_state = value;
@@ -62,21 +52,21 @@ void Passport::setPassportStamp(PassportStampValue value)
     if (current_stamp_state == PassportStampValue::APPROVE)
     {
         stamp_sprite.setTexture(approve_stamp_texture);
+        stamp_sprite.setColor(sf::Color::White);
     }
 
     if (current_stamp_state == PassportStampValue::REJECT)
     {
         stamp_sprite.setTexture(deny_stamp_texture);
+        stamp_sprite.setColor(sf::Color::White);
+    }
+
+    if (current_stamp_state == PassportStampValue::NONE) {
+        stamp_sprite.setColor(sf::Color::Transparent);
     }
 
     positionStamp();
 }
-
-PassportStampValue Passport::getPassportStamp() const
-{
-    return current_stamp_state;
-}
-
 
 // --- Functionality ---
 void Passport::initPassport(const CharacterAssetData& data)
@@ -100,10 +90,27 @@ void Passport::initPassport(const CharacterAssetData& data)
     district_text.setString("District: " + display_district);
 }
 
+void Passport::resetPassport(sf::Vector2f& start_pos)
+{
+    setVisible(true);
+    setPassportStamp(PassportStampValue::NONE);
+    setPassportState(PassportState::CLOSED);
+    setDragPosition(start_pos);
+    setCanBeDragged(true);
+}
+
+
 void Passport::openPassport()
 {
     if (current_state == PassportState::CLOSED) {
         current_state = PassportState::OPEN;
+    }
+}
+
+void Passport::closePassport()
+{
+    if (current_state == PassportState::OPEN) {
+        current_state = PassportState::CLOSED;
     }
 }
 
@@ -123,39 +130,40 @@ void Passport::setDragPosition(const sf::Vector2f &position) {
 
 void Passport::draw(sf::RenderWindow &window, Game &game)
 {
-    sf::Vector2f win_size = game.getDefaultView().getSize();
-    view.setViewport({
-        view_rect.left / win_size.x,
-        view_rect.top / win_size.y,
-        view_rect.width / win_size.x,
-        view_rect.height / win_size.y
-        });
-
-    window.setView(view);
-
-    if (current_state == PassportState::CLOSED)
+    if (is_visible)
     {
-        window.draw(closed_passport_sprite);
+        sf::Vector2f win_size = game.getDefaultView().getSize();
+        view.setViewport({
+            view_rect.left / win_size.x,
+            view_rect.top / win_size.y,
+            view_rect.width / win_size.x,
+            view_rect.height / win_size.y
+            });
+
+        window.setView(view);
+
+        if (current_state == PassportState::CLOSED)
+        {
+            window.draw(closed_passport_sprite);
+        }
+        else if (current_state == PassportState::OPEN)
+        {
+            window.draw(background);
+
+            preparePhoto();
+            window.draw(photo_sprite);
+
+
+            window.draw(name_text);
+            window.draw(age_text);
+            window.draw(district_text);
+
+            window.draw(stamp_sprite);
+        }
+
+        window.setView(game.getDefaultView());
     }
-    else if (current_state == PassportState::OPEN)
-    {
-        window.draw(background);
 
-        preparePhoto();
-        window.draw(photo_sprite);
-
-
-        window.draw(name_text);
-        window.draw(age_text);
-        window.draw(district_text);
-
-        window.draw(stamp_sprite);
-
-    }
-
-
-
-    window.setView(game.getDefaultView());
 }
 
 
@@ -164,7 +172,7 @@ void Passport::draw(sf::RenderWindow &window, Game &game)
 bool Passport::setupBackground()
 {
     // Open Background
-    if (!background_texture.loadFromFile("../Data/Images/Passport.png"))
+    if (!background_texture.loadFromFile("../Data/Images/Passport/Passport.png"))
     {
         std::cerr << "Passport: Failed to load background texture" << std::endl;
         return false;
@@ -174,7 +182,7 @@ bool Passport::setupBackground()
     ScaleTools::scaleToView(background, view);
 
     // Closed Background
-    if (!closed_passport_texture.loadFromFile("../Data/Images/ClosedPassport.png"))
+    if (!closed_passport_texture.loadFromFile("../Data/Images/Passport/ClosedPassport.png"))
     {
         std::cerr << "Passport: Failed to load closed passport texture" << std::endl;
         return false;
@@ -229,13 +237,13 @@ void Passport::preparePhoto()
 
 bool Passport::loadStamps()
 {
-    if (!approve_stamp_texture.loadFromFile("../Data/Images/ApproveStamp.png"))
+    if (!approve_stamp_texture.loadFromFile("../Data/Images/Passport/Stamps/ApproveStamp.png"))
     {
         std::cerr << "Passport: Failed to load approve stamp texture" << std::endl;
         return false;
     }
 
-    if (!deny_stamp_texture.loadFromFile("../Data/Images/DenyStamp.png"))
+    if (!deny_stamp_texture.loadFromFile("../Data/Images/Passport/Stamps/DenyStamp.png"))
     {
         std::cerr << "Passport: Failed to load deny stamp texture" << std::endl;
         return false;

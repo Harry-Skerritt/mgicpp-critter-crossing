@@ -172,29 +172,39 @@ bool PassportStamp::setPositions() {
 
    // Button - Approve
    approve_button_sprite.setScale(0.32f, 0.32f);
-   approve_button_sprite.setPosition(ScaleTools::getScaledPosition(approve_button_unscaled_position, button_background_sprite));
+   approve_button_sprite.setPosition(
+      ScaleTools::getScaledPosition(approve_button_unscaled_position, button_background_sprite));
 
-   approve_text.setPosition(ScaleTools::getScaledPosition(approve_text_unscaled_position, button_background_sprite));
+   approve_text.setPosition(
+      ScaleTools::getScaledPosition(approve_text_unscaled_position, button_background_sprite));
 
-   approve_active_area.setPosition(ScaleTools::getScaledPosition(approve_area_unscaled_pos, button_background_sprite));
+   approve_active_area.setPosition(
+      ScaleTools::getScaledPosition(approve_area_unscaled_pos, button_background_sprite));
 
    // Button - Deny
    deny_button_sprite.setScale(0.32f, 0.32f);
-   deny_button_sprite.setPosition(ScaleTools::getScaledPosition(deny_button_unscaled_position, button_background_sprite));
+   deny_button_sprite.setPosition(
+      ScaleTools::getScaledPosition(deny_button_unscaled_position, button_background_sprite));
 
-   deny_text.setPosition(ScaleTools::getScaledPosition(deny_text_unscaled_position, button_background_sprite));
+   deny_text.setPosition(
+      ScaleTools::getScaledPosition(deny_text_unscaled_position, button_background_sprite));
 
-   deny_active_area.setPosition(ScaleTools::getScaledPosition(deny_area_unscaled_pos, button_background_sprite));
+   deny_active_area.setPosition(
+      ScaleTools::getScaledPosition(deny_area_unscaled_pos, button_background_sprite));
 }
 
 bool PassportStamp::setupActiveAreas() {
-   approve_active_area.setSize(ScaleTools::getScaledSize(active_area_size, button_background_sprite));
+   approve_active_area.setSize(
+      ScaleTools::getScaledSize(active_area_size, button_background_sprite));
    approve_active_area.setFillColor(sf::Color::Transparent);
-   approve_active_area.setPosition(ScaleTools::getScaledPosition(approve_area_unscaled_pos, button_background_sprite));
+   approve_active_area.setPosition(
+      ScaleTools::getScaledPosition(approve_area_unscaled_pos, button_background_sprite));
 
-   deny_active_area.setSize(ScaleTools::getScaledSize(active_area_size, button_background_sprite));
+   deny_active_area.setSize(
+      ScaleTools::getScaledSize(active_area_size, button_background_sprite));
    deny_active_area.setFillColor(sf::Color::Transparent);
-   deny_active_area.setPosition(ScaleTools::getScaledPosition(deny_area_unscaled_pos, button_background_sprite));
+   deny_active_area.setPosition(
+      ScaleTools::getScaledPosition(deny_area_unscaled_pos, button_background_sprite));
 }
 
 

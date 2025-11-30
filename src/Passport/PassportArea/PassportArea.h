@@ -11,6 +11,7 @@
 
 #include "../../Helpers/ScaleTools/ScaleTools.h"
 
+enum class SlotType { NONE, PASSPORT, RETURN };
 
 class PassportArea {
 // Funcs
@@ -18,7 +19,7 @@ public:
   PassportArea();
   ~PassportArea() = default;
 
-  void init(sf::Sprite& background_sprite);
+  void init(std::string texture_loc);
   void update();
   void draw(sf::RenderWindow& window);
 
@@ -29,18 +30,24 @@ public:
   void setVisible(bool visible);
   bool isVisible() { return is_visible; };
 
+  void setSlotType(SlotType slot_type);
+  SlotType getSlotType() const { return passport_slot_type; }
+
+  void setAreaPosition(sf::Vector2f& pos, sf::Sprite& background_sprite);
+
 private:
 
-  bool loadTextures(sf::Sprite& background_sprite);
+  bool loadTextures(std::string texture_loc);
 
 // Vars
 public:
 private:
   sf::Texture passport_area_texture;
   sf::Sprite passport_area;
-  sf::Vector2f passport_area_unscaled_pos = { 2198, 89 };
 
   sf::Vector2f passport_lock_point_offset = { 50, 50 };
+
+  SlotType passport_slot_type = SlotType::NONE;
 
   bool is_visible = false;
 

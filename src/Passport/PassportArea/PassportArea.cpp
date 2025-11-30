@@ -7,9 +7,9 @@
  PassportArea::PassportArea() {  }
 
 
-void PassportArea::init(sf::Sprite& background_sprite)
+void PassportArea::init(std::string texture_loc)
 {
-   loadTextures(background_sprite);
+   loadTextures(texture_loc);
 }
 
 void PassportArea::draw(sf::RenderWindow& window)
@@ -47,17 +47,29 @@ void PassportArea::setVisible(bool visible)
   is_visible = visible;
 }
 
+void PassportArea::setSlotType(SlotType slot_type)
+{
+   passport_slot_type = slot_type;
+}
+
+
 // --- PRIVATE ---
-bool PassportArea::loadTextures(sf::Sprite& background_sprite) {
-   if (!passport_area_texture.loadFromFile("../Data/Images/PassportSlot.png"))
+bool PassportArea::loadTextures(std::string texture_loc) {
+   if (!passport_area_texture.loadFromFile(texture_loc))
    {
      std::cout << "Passport slot texture failed to load!" << std::endl;
      return false;
    }
    passport_area.setTexture(passport_area_texture);
    passport_area.setScale(0.5f, 0.5f);
-   passport_area.setPosition(ScaleTools::getScaledPosition(passport_area_unscaled_pos, background_sprite));
  }
+
+void PassportArea::setAreaPosition(sf::Vector2f &pos, sf::Sprite& background_sprite)
+{
+   passport_area.setPosition(ScaleTools::getScaledPosition(pos, background_sprite));
+
+}
+
 
 
 

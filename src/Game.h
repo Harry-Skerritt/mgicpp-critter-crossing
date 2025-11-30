@@ -59,6 +59,10 @@ private:
 
   // Passport Slot
   PassportArea passport_area;
+  sf::Vector2f passport_area_unscaled_pos = { 2198, 89 };
+
+  PassportArea return_area;
+  sf::Vector2f return_area_unscaled_pos = { 965, 1699 };
 
   // Stamp Buttons
   std::shared_ptr<PassportStamp> passport_stamp;
@@ -69,13 +73,14 @@ private:
   std::shared_ptr<CharacterAssetData> character_data = nullptr;
   const float CHARACTER_WIDTH = 300.f;
   const float CHARACTER_HEIGHT_MULTIPLIER = 1.09f;
-  std::unique_ptr<Character> temp_character;
+  std::unique_ptr<Character> character_object;
+  sf::Vector2f character_unsclaed_pos = { 629, 426 };
 
   // Passport
   PassportDataManager passport_data_manager;
   const float PASSPORT_WIDTH = 600.f;
   const float PASSPORT_HEIGHT_MULTIPLIER = 1.391f;
-  std::unique_ptr<Passport> temp_passport;
+  std::unique_ptr<Passport> passport_object;
 
   // Passport Dragging
   Passport* passport_drag = nullptr;

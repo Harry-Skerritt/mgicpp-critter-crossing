@@ -31,16 +31,22 @@ public:
     void initPassport(const CharacterAssetData& data);
     void setDataManager(PassportDataManager* manager);
 
-    void setPassportState(PassportState state);
-    PassportState getPassportState() const;
+    void setPassportState(PassportState state) { current_state = state; }
+    PassportState getPassportState() const { return current_state; }
 
     void setPassportStamp(PassportStampValue value);
-    PassportStampValue getPassportStamp() const;
+    PassportStampValue getPassportStamp() const { return current_stamp_state; }
 
     void setCanBeDragged(bool value) { can_be_dragged = value; }
     bool getCanBeDragged() const { return can_be_dragged; }
 
+    void setVisible(bool visible) { is_visible = visible; };
+    bool getVisible() const { return is_visible; }
+
     void openPassport();
+    void closePassport();
+
+    void resetPassport(sf::Vector2f& start_pos);
 
     // 'Sprite' funcs
     sf::FloatRect getPassportBounds() const;
@@ -118,6 +124,7 @@ private:
 
     // Dragging
     bool can_be_dragged = true;
+    bool is_visible = true;
 
 };
 

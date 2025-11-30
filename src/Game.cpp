@@ -30,15 +30,24 @@ bool Game::init()
   loadBackground();
   loadSprites();
 
-  // Passport Slot
-  passport_area.init(background_sprite);
+  // Passport Slots
+  passport_area.init("../Data/Images/Passport/Slots/PassportSlot.png");
+  passport_area.setSlotType(SlotType::PASSPORT);
+  passport_area.setAreaPosition(passport_area_unscaled_pos, background_sprite);
+
+  return_area.init("../Data/Images/Passport/Slots/ReturnSlot.png");
+  return_area.setSlotType(SlotType::RETURN);
+  return_area.setAreaPosition(return_area_unscaled_pos, background_sprite);
 
   // Load passport
-  temp_passport = std::make_unique<Passport>(sf::Vector2f(600, 100), sf::Vector2f(PASSPORT_WIDTH, (PASSPORT_WIDTH*PASSPORT_HEIGHT_MULTIPLIER)));
-  temp_passport->setDataManager(&passport_data_manager);
+  passport_object = std::make_unique<Passport>(sf::Vector2f(600, 100),
+    sf::Vector2f(PASSPORT_WIDTH, (PASSPORT_WIDTH*PASSPORT_HEIGHT_MULTIPLIER)));
+  passport_object->setDataManager(&passport_data_manager);
 
   // Init character
-  temp_character = std::make_unique<Character>(sf::Vector2f(200, 200), sf::Vector2f(CHARACTER_WIDTH, (CHARACTER_WIDTH * CHARACTER_HEIGHT_MULTIPLIER)));
+  character_object = std::make_unique<Character>(
+    ScaleTools::getScaledPosition(character_unsclaed_pos, background_sprite),
+    sf::Vector2f(CHARACTER_WIDTH, (CHARACTER_WIDTH * CHARACTER_HEIGHT_MULTIPLIER)));
 
   // Passport Stamp
   passport_stamp = std::make_shared<PassportStamp>();
@@ -51,7 +60,7 @@ void Game::update(float dt)
   // Handle Gameplay
   if (game_state == GameState::PLAY)
   {
-    temp_character->loadCharacter(*character_data);
+    character_object->loadCharacter(*character_data);
 
     dragPassport(passport_drag);
 
@@ -60,7 +69,6 @@ void Game::update(float dt)
       sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
       sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
       passport_stamp->handleMouseHover(mouse_pos_coords);
-      //std::cout << "Mouse X: " << mouse_pos_coords.x << " Y: " << mouse_pos_coords.y << std::endl;
     }
   }
 
@@ -73,18 +81,18 @@ void Game::render()
     window.draw(background_sprite);
     window.draw(desk_sprite);
 
-    if (temp_passport->getPassportStamp() == PassportStampValue::NONE)
+    if (passport_object->getPassportStamp() == PassportStampValue::NONE)
     {
       passport_area.draw(window);
     }
     else
     {
-      // Draw the other areas
+      return_area.draw(window);
     }
 
 
-    temp_character->draw(window, *this);
-    temp_passport->draw(window, *this);
+    character_object->draw(window, *this);
+    passport_object->draw(window, *this);
 
     passport_stamp->draw(window);
 
@@ -114,13 +122,14 @@ void Game::mouseClicked(sf::Event event)
   sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
   sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
 
-  std::cout << temp_passport->getCanBeDragged() << std::endl;
+  std::cout << passport_object->getCanBeDragged() << std::endl;
 
   if (event.mouseButton.button == sf::Mouse::Left)
   {
-    if (temp_passport->getPassportBounds().contains(mouse_pos_coords) && temp_passport->getCanBeDragged())
+    if (passport_object->getPassportBounds().contains(mouse_pos_coords)
+      && passport_object->getCanBeDragged())
     {
-      passport_drag = temp_passport.get();
+      passport_drag = passport_object.get();
     }
     if (passport_stamp_visible)
     {
@@ -129,11 +138,12 @@ void Game::mouseClicked(sf::Event event)
   }
   else if (event.mouseButton.button == sf::Mouse::Right)
   {
-    if (temp_passport->getPassportState() == PassportState::OPEN)
+    if (passport_object->getPassportState() == PassportState::OPEN)
     {
       passport_stamp_visible = !passport_stamp->getVisible();
-      passport_stamp->showStampUI(passport_stamp_visible, mouse_pos_coords, game_view.getSize());
-      passport_stamp->setPassport(temp_passport.get());
+      passport_stamp->showStampUI(passport_stamp_visible, mouse_pos_coords,
+        game_view.getSize());
+      passport_stamp->setPassport(passport_object.get());
 
     }
 
@@ -155,12 +165,9 @@ void Game::keyPressed(sf::Event event)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
     {
       character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
-      temp_passport->initPassport(*character_data);
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-    {
-      temp_passport->openPassport();
+      sf::Vector2f pos = {100.f, 100.f};
+      passport_object->resetPassport(pos);
+      passport_object->initPassport(*character_data);
     }
   }
 
@@ -237,23 +244,49 @@ void Game::dragPassport(Passport* passport)
 {
   if (passport != nullptr)
   {
-    passport_area.setVisible(true);
+    if (passport_object->getPassportStamp() == PassportStampValue::NONE)
+    {
+      passport_area.setVisible(true);
+    }
+    else
+    {
+      return_area.setVisible(true);
+      passport->closePassport();
+    }
+
     sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
     sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
 
-    sf::Vector2f drag_pos = sf::Vector2f(mouse_pos_coords.x - DRAG_OFFSET, mouse_pos_coords.y - DRAG_OFFSET);
+    sf::Vector2f drag_pos = sf::Vector2f(
+      mouse_pos_coords.x - DRAG_OFFSET,
+      mouse_pos_coords.y - DRAG_OFFSET);
     passport->setDragPosition(drag_pos);
   }
   else
   {
-    if (passport_area.isPassportInArea(temp_passport->getPassportPosition())
-      && temp_passport->getPassportStamp() == PassportStampValue::NONE)
+    // Passport Handle Area
+    if (passport_area.isPassportInArea(passport_object->getPassportPosition())
+      && passport_area.getSlotType() == SlotType::PASSPORT
+      && passport_object->getPassportStamp() == PassportStampValue::NONE)
     {
-      temp_passport->setDragPosition(passport_area.getPassportLockPosition());
-      temp_passport->setPassportState(PassportState::OPEN);
-      temp_passport->setCanBeDragged(false);
+      passport_object->setDragPosition(passport_area.getPassportLockPosition());
+      passport_object->openPassport();
+      passport_object->setCanBeDragged(false);
+      passport_area.setVisible(false);
     }
-    passport_area.setVisible(false);
+
+    // Passport Return Area
+    //return_area.isPassportInArea(temp_passport->getPassportPosition()
+    if (return_area.isPassportInArea(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
+      && return_area.getSlotType() == SlotType::RETURN
+      && passport_object->getPassportStamp() != PassportStampValue::NONE)
+    {
+      return_area.setVisible(false);
+      passport_object->setCanBeDragged(false);
+      passport_object->setVisible(false);
+      // createNewCharacter();
+    }
+
   }
 }
 
