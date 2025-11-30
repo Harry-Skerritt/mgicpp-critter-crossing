@@ -37,6 +37,8 @@ set(SOURCE_FILES
         src/Manager/FontManager/FontManager.cpp
         src/Helpers/ScaleTools/ScaleTools.h
         src/Helpers/ScaleTools/ScaleTools.cpp
+        src/Effects/FeedbackFade.h
+        src/Effects/FeedbackFade.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
 
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use

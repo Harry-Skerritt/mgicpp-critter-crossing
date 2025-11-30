@@ -52,6 +52,9 @@ bool Game::init()
   // Passport Stamp
   passport_stamp = std::make_shared<PassportStamp>();
 
+  // Feedback
+  feedback.init("../Data/Images/FeedbackEffect.png", 0.5f, 0.5f, 0.1f);
+
   return true;
 }
 
@@ -70,6 +73,8 @@ void Game::update(float dt)
       sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
       passport_stamp->handleMouseHover(mouse_pos_coords);
     }
+
+    feedback.update(dt);
   }
 
 }
@@ -95,6 +100,8 @@ void Game::render()
     passport_object->draw(window, *this);
 
     passport_stamp->draw(window);
+
+    feedback.draw(window);
 
     if (draw_mouse_coords)
     {
@@ -168,6 +175,15 @@ void Game::keyPressed(sf::Event event)
       sf::Vector2f pos = {100.f, 100.f};
       passport_object->resetPassport(pos);
       passport_object->initPassport(*character_data);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+      feedback.startFeedback(correct_feedback);
+    }
+
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+      feedback.startFeedback(incorrect_feedback);
     }
   }
 

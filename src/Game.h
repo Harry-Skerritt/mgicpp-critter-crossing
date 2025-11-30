@@ -7,6 +7,7 @@
 
 #include "Characters/Character.h"
 #include "Characters/CharacterCreator/CharacterCreator.h"
+#include "Effects/FeedbackFade.h"
 #include "Passport/Passport.h"
 #include "Passport/PassportArea/PassportArea.h"
 #include "Passport/PassportStamp/PassportStamp.h"
@@ -85,6 +86,11 @@ private:
   // Passport Dragging
   Passport* passport_drag = nullptr;
   const float DRAG_OFFSET = 40;
+
+  // Feedback
+  FeedbackFade feedback;
+  sf::Color correct_feedback = sf::Color(95, 183, 40, 255);
+  sf::Color incorrect_feedback = sf::Color(183, 57, 40, 255);
 
 
 
