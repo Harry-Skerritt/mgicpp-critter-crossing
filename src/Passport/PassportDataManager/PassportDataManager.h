@@ -36,6 +36,10 @@ public:
     const std::vector<std::string>* getDistricts();
     std::string generateDistrict();
 
+    // Matching
+    void setPassportMatching(bool match) { does_passport_match = match; }
+    bool getPassportMatching() const { return does_passport_match; }
+
 private:
     std::vector<std::string> loadFile(std::string file_name, std::string resource_location = "../Data/Resources/");
 
@@ -56,6 +60,8 @@ private:
     bool district_loaded = false;
 
     std::string last_district;
+
+    bool does_passport_match;
 };
 
 

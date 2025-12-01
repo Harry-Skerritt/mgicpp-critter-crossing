@@ -29,6 +29,10 @@ class Game
 
   const sf::View& getDefaultView();
 
+  void setGameState(GameState state) { game_state = state; }
+
+  bool getDebug() const { return debug_mode; };
+
 private:
     bool loadBackground();
     bool loadFonts();
@@ -37,15 +41,25 @@ private:
 
     void dragPassport(Passport* passport);
 
+  void makePassportSmall();
+  void makePassportBig();
+
+  void createNewRound();
+
+  bool decideIfMatch() const;
+
+
+
 // Vars
 public:
 
 private:
   // Debug
-  bool draw_mouse_coords = false;
+  bool debug_mode = true;
 
   sf::RenderWindow& window;
   sf::View game_view;
+  float current_zoom = 1.0f;
 
   GameState game_state = GameState::PLAY; // Todo: Change to Menu and add menu
 
@@ -72,16 +86,20 @@ private:
   // Characters
   CharacterCreator character_creator;
   std::shared_ptr<CharacterAssetData> character_data = nullptr;
-  const float CHARACTER_WIDTH = 300.f;
+  const float CHARACTER_WIDTH = 629.f;
   const float CHARACTER_HEIGHT_MULTIPLIER = 1.09f;
   std::unique_ptr<Character> character_object;
-  sf::Vector2f character_unsclaed_pos = { 629, 426 };
+  sf::Vector2f character_unscaled_pos = { 800, 270 };
 
   // Passport
   PassportDataManager passport_data_manager;
-  const float PASSPORT_WIDTH = 600.f;
-  const float PASSPORT_HEIGHT_MULTIPLIER = 1.391f;
   std::unique_ptr<Passport> passport_object;
+  std::shared_ptr<CharacterAssetData> passport_character_data = nullptr;
+
+  sf::Vector2f passport_spawn_pos_unscaled = { 1888, 1130 };
+  sf::Vector2f passport_spawn_size_unscaled = { 653, 939 };
+  sf::Vector2f passport_main_size_unscaled = { 1306, 1879 };
+  const float PASSPORT_SCALE_FACTOR = 2.f;
 
   // Passport Dragging
   Passport* passport_drag = nullptr;
@@ -93,6 +111,7 @@ private:
   sf::Color incorrect_feedback = sf::Color(183, 57, 40, 255);
 
 
+  const float MATCH_PROBABILITY = 0.2f;
 
 
 };

@@ -4,11 +4,14 @@
 
 #include "PassportStamp.h"
 
+#include "../../Game.h"
 #include "../../Helpers/ScaleTools/ScaleTools.h"
 
 #include <iostream>
 
-PassportStamp::PassportStamp() {
+PassportStamp::PassportStamp(Game* game_ref) {
+   game = game_ref;
+
    setupTextures();
    setupText();
    setupActiveAreas();
@@ -53,7 +56,9 @@ void PassportStamp::handleMouseHover(sf::Vector2f mouse_pos)
 void PassportStamp::onMouseClick() {
    if (approve_hovered)
    {
-      std::cout << "Approve Passport" << std::endl;
+      if (game->getDebug())
+         std::cout << "Approve Passport" << std::endl;
+
       is_visible = false;
       if (passport != nullptr)
       {
@@ -65,7 +70,9 @@ void PassportStamp::onMouseClick() {
 
    if (deny_hovered)
    {
-      std::cout << "Deny Passport" << std::endl;
+      if (game->getDebug())
+         std::cout << "Deny Passport" << std::endl;
+
       is_visible = false;
       if (passport != nullptr)
       {

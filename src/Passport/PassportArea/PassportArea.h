@@ -45,7 +45,7 @@ private:
   sf::Texture passport_area_texture;
   sf::Sprite passport_area;
 
-  sf::Vector2f passport_lock_point_offset = { 50, 50 };
+  sf::Vector2f passport_lock_point_offset = { 20, 20 };
 
   SlotType passport_slot_type = SlotType::NONE;
 

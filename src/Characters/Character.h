@@ -36,6 +36,8 @@ public:
 
     void setViewCentre(const sf::Vector2f& centre);
 
+    sf::View& getView() { return view; }
+
 private:
     // Debug
     // Todo: Remove before building

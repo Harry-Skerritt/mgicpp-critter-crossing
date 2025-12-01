@@ -43,6 +43,12 @@ public:
     void setVisible(bool visible) { is_visible = visible; };
     bool getVisible() const { return is_visible; }
 
+    void setZoom(float factor);
+    float getZoom() const;
+
+    void setSize(sf::Vector2f size);
+    sf::Vector2f getSize() const;
+
     void openPassport();
     void closePassport();
 
@@ -82,6 +88,7 @@ private:
     // View
     sf::View view;
     sf::FloatRect view_rect;
+    float zoom = 1.0f;
 
     // Background
     sf::Texture background_texture;

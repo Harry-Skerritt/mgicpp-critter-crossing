@@ -5,18 +5,20 @@
 #ifndef PASSPORTSTAMP_H
 #define PASSPORTSTAMP_H
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 #include "../../Manager/FontManager/FontManager.h"
 #include "../Passport.h"
 
-
+class Game;
 
 class PassportStamp {
 
 // Funcs
 public:
-  PassportStamp();
+  PassportStamp(Game* game_ref);
   ~PassportStamp() = default;
 
   void init();
@@ -41,6 +43,8 @@ private:
 // Vars
 public:
 private:
+  Game* game;
+
   // Buttons
   sf::Texture plank_texture_1;
   sf::Texture plank_texture_2;

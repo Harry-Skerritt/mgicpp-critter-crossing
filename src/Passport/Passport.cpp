@@ -14,6 +14,7 @@ Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size)
     view.setSize(size);
     view.setCenter(size.x / 2.f, size.y / 2.f);
     view_rect = sf::FloatRect(position.x, position.y, size.x, size.y);
+    view.zoom(zoom);
 
     if (!setupBackground())
     {
@@ -68,6 +69,31 @@ void Passport::setPassportStamp(PassportStampValue value)
     positionStamp();
 }
 
+void Passport::setZoom(float factor) {
+    zoom = factor;
+    view.zoom(zoom);
+}
+
+float Passport::getZoom() const {
+    return zoom;
+}
+
+void Passport::setSize(sf::Vector2f size) {
+    view.setSize(size);
+
+    sf::FloatRect new_view_rect = {
+        view_rect.left,
+        view_rect.top,
+        size.x,
+        size.y
+    };
+    view_rect = new_view_rect;
+}
+
+sf::Vector2f Passport::getSize() const {
+    return view.getSize();
+}
+
 // --- Functionality ---
 void Passport::initPassport(const CharacterAssetData& data)
 {
@@ -75,7 +101,6 @@ void Passport::initPassport(const CharacterAssetData& data)
 
     if (asset_data == nullptr)
     {
-        // Gen new data
         std::cerr << "Passport::initPassport: asset data is null" << std::endl;
         asset_data = nullptr;
     }
