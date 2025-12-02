@@ -23,9 +23,9 @@ public:
   void init(std::string texture_loc);
   void draw(sf::RenderWindow& window);
 
-  bool isPassportInArea(Passport* passport);
+  bool isPassportInArea(Passport* passport) const;
 
-  sf::Vector2f getPassportLockPosition();
+  sf::Vector2f getPassportLockPosition() const;
 
   void setVisible(bool visible);
   bool isVisible() const { return is_visible; };

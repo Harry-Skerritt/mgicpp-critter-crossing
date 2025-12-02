@@ -463,7 +463,7 @@ void Game::createNewRound() {
       std::cout << "Passport not matching" << std::endl;
 
     // Don't match so generate another for passport
-    passport_character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter()); // Todo: Move to a new func to ensure its not the same
+    passport_character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
   }
 
   // Send data to passport

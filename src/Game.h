@@ -80,7 +80,7 @@ private:
   sf::View game_view;
   float current_zoom = 1.0f;
 
-  GameState game_state = GameState::MENU; // Todo: Change to Menu and add menu
+  GameState game_state = GameState::MENU;
 
   // Background
   sf::Texture background_texture;
@@ -126,11 +126,10 @@ private:
 
   // Feedback
   FeedbackFade feedback;
-  sf::Color correct_feedback = sf::Color(95, 183, 40, 255);
-  sf::Color incorrect_feedback = sf::Color(183, 57, 40, 255);
+  sf::Color incorrect_feedback = sf::Color(234, 147, 147, 255);
+  sf::Color correct_feedback = sf::Color(177, 213, 100, 255);
 
-
-  const float MATCH_PROBABILITY = 0.2f;
+  const float MATCH_PROBABILITY = 0.4f;
 
 
 };

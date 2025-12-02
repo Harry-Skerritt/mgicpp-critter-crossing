@@ -72,8 +72,8 @@ private:
 
   // Colours
   sf::Color default_button_colour = sf::Color::White;
-  sf::Color deny_hover_colour = sf::Color::Red; // Todo: Make fit better
-  sf::Color approve_hover_colour = sf::Color::Green; // Todo: Make fit better
+  sf::Color deny_hover_colour = sf::Color(247, 75, 75, 255);
+  sf::Color approve_hover_colour = sf::Color(177, 213, 100, 255);
 
   // State
   bool is_visible = false;

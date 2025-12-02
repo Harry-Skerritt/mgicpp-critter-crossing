@@ -16,27 +16,19 @@ void PassportArea::draw(sf::RenderWindow& window)
 {
    if (is_visible) {
      window.draw(passport_area);
-
-     sf::RectangleShape rect;
-     rect.setFillColor(sf::Color::White);
-     rect.setSize({10.f, 10.f});
-     sf::Vector2f pos = passport_area.getPosition() + passport_lock_point_offset;
-     rect.setPosition(pos);
-     window.draw(rect);
    }
 
 }
 
 
-bool PassportArea::isPassportInArea(Passport* passport)
-{
+bool PassportArea::isPassportInArea(Passport* passport) const {
    if (passport_area.getGlobalBounds().contains(passport->getPassportPosition())) {
      return true;
    }
    return false;
 }
 
-sf::Vector2f PassportArea::getPassportLockPosition() {
+sf::Vector2f PassportArea::getPassportLockPosition() const {
    sf::Vector2f pos = passport_area.getPosition() + passport_lock_point_offset;
    return pos;
  }
@@ -62,6 +54,7 @@ bool PassportArea::loadTextures(std::string texture_loc) {
    }
    passport_area.setTexture(passport_area_texture);
    passport_area.setScale(0.5f, 0.5f);
+   return true;
  }
 
 void PassportArea::setAreaPosition(sf::Vector2f &pos, sf::Sprite& background_sprite)
