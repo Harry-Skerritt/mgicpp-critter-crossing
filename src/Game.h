@@ -19,7 +19,7 @@ class Game
  // Funcs
  public:
   Game(sf::RenderWindow& window);
-  ~Game();
+  ~Game() = default;
   bool init();
   void update(float dt);
   void render();
@@ -35,18 +35,25 @@ class Game
 
 private:
     bool loadBackground();
-    bool loadFonts();
+    static bool loadFonts();
     bool loadData();
     bool loadSprites();
+    void setupSlots();
 
     void dragPassport(Passport* passport);
 
-  void makePassportSmall();
-  void makePassportBig();
+    void handleDragAreas(Passport* passport);
+    sf::Vector2f getDragPosition();
+    void handlePassportDropped();
+    void validatePassport(Passport* passport);
 
-  void createNewRound();
 
-  bool decideIfMatch() const;
+    void makePassportSmall();
+    void makePassportBig();
+
+    void createNewRound();
+
+    bool decideIfMatch() const;
 
 
 
@@ -55,7 +62,10 @@ public:
 
 private:
   // Debug
-  bool debug_mode = true;
+  bool debug_mode = false;
+
+  int rounds_played = 0;
+  int rounds_correct = 0;
 
   sf::RenderWindow& window;
   sf::View game_view;

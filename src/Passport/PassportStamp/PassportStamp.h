@@ -29,15 +29,15 @@ public:
   void draw(sf::RenderWindow& window);
 
   void showStampUI(bool visible, sf::Vector2f mouse_pos, sf::Vector2f window_size);
-  bool getVisible() { return is_visible; }
+  bool getVisible() const { return is_visible; }
 
   void setPassport(Passport* passport);
 
 private:
   bool setupTextures();
-  bool setupText();
-  bool setPositions();
-  bool setupActiveAreas();
+  void setupText();
+  void setPositions();
+  void setupActiveAreas();
 
 
 // Vars

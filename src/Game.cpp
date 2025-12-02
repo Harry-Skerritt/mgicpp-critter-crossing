@@ -16,8 +16,6 @@ Game::Game(sf::RenderWindow& game_window)
 
 }
 
-Game::~Game() { }
-
 bool Game::init()
 {
 
@@ -27,13 +25,7 @@ bool Game::init()
   loadSprites();
 
   // Passport Slots
-  passport_area.init("../Data/Images/Passport/Slots/PassportSlot.png");
-  passport_area.setSlotType(SlotType::PASSPORT);
-  passport_area.setAreaPosition(passport_area_unscaled_pos, background_sprite);
-
-  return_area.init("../Data/Images/Passport/Slots/ReturnSlot.png");
-  return_area.setSlotType(SlotType::RETURN);
-  return_area.setAreaPosition(return_area_unscaled_pos, background_sprite);
+  setupSlots();
 
   // Load passport
   sf::Vector2f vec2 = ScaleTools::getScaledSize(passport_main_size_unscaled, background_sprite);
@@ -52,6 +44,7 @@ bool Game::init()
   // Feedback
   feedback.init("../Data/Images/FeedbackEffect.png", 0.5f, 0.5f, 0.1f);
 
+  // Start Game
   createNewRound();
 
   return true;
@@ -248,90 +241,136 @@ bool Game::loadSprites() {
   return true;
 }
 
-void Game::dragPassport(Passport* passport)
-{
-  if (passport != nullptr)
+void Game::setupSlots() {
+  passport_area.init("../Data/Images/Passport/Slots/PassportSlot.png");
+  passport_area.setSlotType(SlotType::PASSPORT);
+  passport_area.setAreaPosition(passport_area_unscaled_pos, background_sprite);
+
+  return_area.init("../Data/Images/Passport/Slots/ReturnSlot.png");
+  return_area.setSlotType(SlotType::RETURN);
+  return_area.setAreaPosition(return_area_unscaled_pos, background_sprite);
+}
+
+void Game::handleDragAreas(Passport* passport) {
+  if (!passport->getPassportStamped())
   {
+    // Passport isn't stamped so cannot be returned
+    passport_area.setVisible(true);
 
-    if (passport_object->getPassportStamp() == PassportStampValue::NONE)
+    if (debug_mode)
+      std::cout << "Passport has not been stamped" << std::endl;
+  }
+  else if (passport->getPassportStamped())
+  {
+    // Passport is stamped so can be returned
+    return_area.setVisible(true);
+
+    passport->closePassport();
+    makePassportSmall();
+    passport_stamp->setPassport(nullptr);
+
+    if (debug_mode)
+      std::cout << "Passport has been stamped" << std::endl;
+  }
+}
+
+sf::Vector2f Game::getDragPosition() {
+  sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+  sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
+
+  sf::Vector2f drag_pos = sf::Vector2f(
+    mouse_pos_coords.x - DRAG_OFFSET,
+    mouse_pos_coords.y - DRAG_OFFSET);
+
+  return drag_pos;
+}
+
+void Game::handlePassportDropped() {
+  // Passport has been dropped
+  if (passport_object->getPassportStamped())
+  {
+    // If stamped then can only be returned
+    if (return_area.isPassportInArea(passport_object.get()))
     {
-      passport_area.setVisible(true);
+      std::cout << "Passport has been stamped and is in RETURN area" << std::endl;
 
-      if (debug_mode)
-        std::cout << "Passport Stamp Value is None" << std::endl;
+      // Hide and immobilise passport
+      passport_object->setCanBeDragged(false);
+      passport_object->setVisible(false);
+      return_area.setVisible(false);
 
+      validatePassport(passport_object.get());
     }
-    else
-    {
-      return_area.setVisible(true);
-      passport->closePassport();
-      makePassportSmall();
-
-      if (debug_mode)
-        std::cout << "Passport Stamp Value is not None" << std::endl;
-
-    }
-
-    sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-    sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
-
-    sf::Vector2f drag_pos = sf::Vector2f(
-      mouse_pos_coords.x - DRAG_OFFSET,
-      mouse_pos_coords.y - DRAG_OFFSET);
-    passport->setDragPosition(drag_pos);
   }
   else
   {
-    // Passport Handle Area
-    if (passport_area.isPassportInArea(passport_object->getPassportPosition())
-      && passport_area.getSlotType() == SlotType::PASSPORT
-      && passport_object->getPassportStamp() == PassportStampValue::NONE)
+    // Not stamped - so cannot be returned
+    if (passport_area.isPassportInArea(passport_object.get()))
     {
+      std::cout << "Passport has NOT been stamped and is in PASSPORT area" << std::endl;
+
+      // Set the passport to be in the area
       passport_object->setDragPosition(passport_area.getPassportLockPosition());
+
       makePassportBig();
       passport_object->openPassport();
       passport_object->setCanBeDragged(false);
       passport_area.setVisible(false);
     }
+  }
+}
 
-    // Passport Return Area
-    if (return_area.isPassportInArea(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
-      && return_area.getSlotType() == SlotType::RETURN
-      && passport_object->getPassportStamp() != PassportStampValue::NONE)
+void Game::validatePassport(Passport *passport) {
+  if (passport_data_manager.getPassportMatching())
+  {
+    // Passport matches
+    if (passport->getPassportStamp() == PassportStampValue::APPROVE)
     {
-      return_area.setVisible(false);
-      passport_object->setCanBeDragged(false);
-      passport_object->setVisible(false);
-
-      if (passport_data_manager.getPassportMatching() &&
-        passport_object->getPassportStamp() == PassportStampValue::APPROVE)
-      {
-        // Passport did match - so approve
-        feedback.startFeedback(correct_feedback);
-      }
-      else if (passport_data_manager.getPassportMatching() &&
-        passport_object->getPassportStamp() == PassportStampValue::REJECT)
-      {
-        // Passport did match - but denied
-        feedback.startFeedback(incorrect_feedback);
-      }
-
-      if (!passport_data_manager.getPassportMatching() &&
-        passport_object->getPassportStamp() == PassportStampValue::REJECT)
-      {
-        // Passport did not match - so deny
-        feedback.startFeedback(correct_feedback);
-      }
-      else if (!passport_data_manager.getPassportMatching() &&
-        passport_object->getPassportStamp() == PassportStampValue::APPROVE)
-      {
-        // Passport did not match - but approved
-        feedback.startFeedback(incorrect_feedback);
-      }
-
-      createNewRound();
+      // Correct
+      feedback.startFeedback(correct_feedback);
+      rounds_correct++;
     }
+    else if (passport->getPassportStamp() == PassportStampValue::REJECT)
+    {
+      // Incorrect
+      feedback.startFeedback(incorrect_feedback);
+    }
+  }
+  else
+  {
+    // Passport does not match
+    if (passport->getPassportStamp() == PassportStampValue::APPROVE)
+    {
+      // Incorrect
+      feedback.startFeedback(incorrect_feedback);
+    }
+    else if (passport->getPassportStamp() == PassportStampValue::REJECT)
+    {
+      // Correct
+      feedback.startFeedback(correct_feedback);
+      rounds_correct++;
+    }
+  }
 
+  createNewRound();
+}
+
+void Game::dragPassport(Passport* passport)
+{
+  if (passport != nullptr)
+  {
+    // - Passport is being dragged -
+
+    // Visuals of drag areas
+    handleDragAreas(passport);
+
+    // Moving the passport
+    passport->setDragPosition(getDragPosition());
+  }
+  else
+  {
+    // - Passport isn't being dragged -
+    handlePassportDropped();
   }
 }
 
@@ -346,33 +385,35 @@ void Game::makePassportSmall() {
 }
 
 bool Game::decideIfMatch() const {
-    return (rand() / RAND_MAX) < MATCH_PROBABILITY;
+    bool match = (static_cast<float>(rand()) / RAND_MAX) < MATCH_PROBABILITY;
+
+    if (debug_mode)
+      std::cout << "Match: " << match << std::endl;
+
+    return match;
 }
 
 void Game::createNewRound() {
-  // Create First Character - Done
-  // - Decide if the passport will match - Done
-  // - - Store this decision - Done
-  // - Generate the character - Done
-  // - - If they differ generate the passport and pass to passport - Done
-  // - Show Everything & Check interaction is enabled - Done
-  // - Allow player to play - Done
-  // - Once returned
-  // - - Check if correct decision - Done
-  // - - Apply feedback - Done
-  // - - Start over
+  if (debug_mode)
+    std::cout << "Creating new round..." << std::endl;
+
+  // Reset Passport
+  sf::Vector2f pos = ScaleTools::getScaledPosition(passport_spawn_pos_unscaled, background_sprite);
+  passport_object->resetPassport(pos);
+  passport_object->setPassportStamp(PassportStampValue::NONE);
+  passport_object->resetPassportStamped();
+  makePassportSmall();
+  passport_drag = nullptr;
+
+  if (debug_mode)
+    std::cout << "Stamp Value: " << passport_object->getPassportStampValue() << std::endl;
+    std::cout << "Stamped Value: " << passport_object->getPassportStamped() << std::endl;
 
   // Choose if matching
   passport_data_manager.setPassportMatching(decideIfMatch());
 
   // Generate character
   character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
-
-  // Reset Passport
-  sf::Vector2f pos = ScaleTools::getScaledPosition(passport_spawn_pos_unscaled, background_sprite);
-  passport_object->resetPassport(pos);
-  passport_object->setPassportStamp(PassportStampValue::NONE);
-  makePassportSmall();
 
   if (passport_data_manager.getPassportMatching())
   {
@@ -387,12 +428,14 @@ void Game::createNewRound() {
     if (debug_mode)
       std::cout << "Passport not matching" << std::endl;
 
-    // Dont match so generate another for passport
+    // Don't match so generate another for passport
     passport_character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter()); // Todo: Move to a new func to ensure its not the same
   }
 
   // Send data to passport
   passport_object->initPassport(*passport_character_data);
+
+  rounds_played++;
 
 }
 

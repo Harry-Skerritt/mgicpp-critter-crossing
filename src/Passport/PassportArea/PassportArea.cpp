@@ -28,9 +28,9 @@ void PassportArea::draw(sf::RenderWindow& window)
 }
 
 
-bool PassportArea::isPassportInArea(sf::Vector2f passport_position)
+bool PassportArea::isPassportInArea(Passport* passport)
 {
-   if (passport_area.getGlobalBounds().contains(passport_position)) {
+   if (passport_area.getGlobalBounds().contains(passport->getPassportPosition())) {
      return true;
    }
    return false;

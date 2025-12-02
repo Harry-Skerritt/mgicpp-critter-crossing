@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Helpers/ScaleTools/ScaleTools.h"
+#include "../Passport.h"
 
 enum class SlotType { NONE, PASSPORT, RETURN };
 
@@ -20,15 +21,14 @@ public:
   ~PassportArea() = default;
 
   void init(std::string texture_loc);
-  void update();
   void draw(sf::RenderWindow& window);
 
-  bool isPassportInArea(sf::Vector2f passport_position);
+  bool isPassportInArea(Passport* passport);
 
   sf::Vector2f getPassportLockPosition();
 
   void setVisible(bool visible);
-  bool isVisible() { return is_visible; };
+  bool isVisible() const { return is_visible; };
 
   void setSlotType(SlotType slot_type);
   SlotType getSlotType() const { return passport_slot_type; }
@@ -55,4 +55,4 @@ private:
 
 
 
-#endif //PASSPORTAREAS_H
+#endif //PASSPORTAREA_H

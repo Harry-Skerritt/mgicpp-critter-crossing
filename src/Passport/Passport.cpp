@@ -94,6 +94,21 @@ sf::Vector2f Passport::getSize() const {
     return view.getSize();
 }
 
+std::string Passport::getPassportStampValue() const {
+    switch (current_stamp_state)
+    {
+        case (PassportStampValue::APPROVE):
+            return "Approve";
+        case (PassportStampValue::REJECT):
+            return "Reject";
+        case (PassportStampValue::NONE):
+            return "None";
+        default:
+            return "Default";
+    }
+}
+
+
 // --- Functionality ---
 void Passport::initPassport(const CharacterAssetData& data)
 {
@@ -117,11 +132,12 @@ void Passport::initPassport(const CharacterAssetData& data)
 
 void Passport::resetPassport(sf::Vector2f& start_pos)
 {
-    setVisible(true);
-    setPassportStamp(PassportStampValue::NONE);
-    setPassportState(PassportState::CLOSED);
+    is_visible = true;
+    current_stamp_state = PassportStampValue::NONE;
+    current_state = PassportState::CLOSED;
+    passport_stamped = false;
+    can_be_dragged = true;
     setDragPosition(start_pos);
-    setCanBeDragged(true);
 }
 
 
@@ -144,7 +160,7 @@ sf::FloatRect Passport::getPassportBounds() const {
 }
 
 sf::Vector2f Passport::getPassportPosition() const {
-    return sf::Vector2f(view_rect.left, view_rect.top);
+    return {view_rect.left, view_rect.top};
 }
 
 void Passport::setDragPosition(const sf::Vector2f &position) {

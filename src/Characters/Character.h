@@ -10,11 +10,6 @@
 
 #include "CharacterCreator/CharacterCreator.h"
 
-#include <array>
-#include <iostream>
-
-
-
 class Game;
 class Passport;
 
@@ -40,8 +35,7 @@ public:
 
 private:
     // Debug
-    // Todo: Remove before building
-    std::string creatureTypeToString(CreatureType type);
+    static std::string creatureTypeToString(CreatureType type);
 
 // Vars
 public:

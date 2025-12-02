@@ -137,7 +137,6 @@ void Character::setViewCentre(const sf::Vector2f &centre)
 
 
 // Debug
-// Todo: Remove before building
 std::string Character::creatureTypeToString(CreatureType type)
 {
     switch (type)

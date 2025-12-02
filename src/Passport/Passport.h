@@ -12,10 +12,8 @@
 #include "PassportDataManager/PassportDataManager.h"
 
 #include <string>
-#include <vector>
-#include <iostream>
 #include <fstream>
-#include <sstream>
+
 
 
 enum class PassportState { OPEN, CLOSED };
@@ -43,6 +41,10 @@ public:
     void setVisible(bool visible) { is_visible = visible; };
     bool getVisible() const { return is_visible; }
 
+    void setPassportStamped() { passport_stamped = true; }
+    void resetPassportStamped() { passport_stamped = false; }
+    bool getPassportStamped() const { return passport_stamped; }
+
     void setZoom(float factor);
     float getZoom() const;
 
@@ -61,6 +63,8 @@ public:
 
     void draw(sf::RenderWindow &window, Game& game);
 
+    std::string getPassportStampValue() const;
+
 
 
 private:
@@ -76,6 +80,8 @@ private:
 public:
 private:
     PassportDataManager* data_manager;
+
+
 
     // Enum States
     PassportState current_state = PassportState::CLOSED;
@@ -128,6 +134,7 @@ private:
     bool stamps_loaded = false;
     sf::Vector2f stamp_pos_unscaled = { 513, 1300 };
     sf::Vector2f stamp_size_unscaled = { 573, 573 };
+    bool passport_stamped = false;
 
     // Dragging
     bool can_be_dragged = true;
