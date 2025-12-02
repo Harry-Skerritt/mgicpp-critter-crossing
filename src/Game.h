@@ -11,6 +11,7 @@
 #include "Passport/Passport.h"
 #include "Passport/PassportArea/PassportArea.h"
 #include "Passport/PassportStamp/PassportStamp.h"
+#include "UI/ProgressCounter.h"
 
 enum class GameState { MENU, PLAY };
 
@@ -64,8 +65,10 @@ private:
   // Debug
   bool debug_mode = false;
 
-  int rounds_played = 0;
+  // UI
+  int rounds_played = 1;
   int rounds_correct = 0;
+  ProgressCounter progress_counter;
 
   sf::RenderWindow& window;
   sf::View game_view;

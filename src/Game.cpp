@@ -44,6 +44,9 @@ bool Game::init()
   // Feedback
   feedback.init("../Data/Images/FeedbackEffect.png", 0.5f, 0.5f, 0.1f);
 
+  // Progress Counter
+  progress_counter.init({0, 0}, &background_sprite);
+
   // Start Game
   createNewRound();
 
@@ -96,6 +99,9 @@ void Game::render()
     passport_object->draw(window, *this);
 
     passport_stamp->draw(window);
+
+    if (progress_counter.isVisible())
+      progress_counter.draw(window);
 
     feedback.draw(window);
 
@@ -292,8 +298,6 @@ void Game::handlePassportDropped() {
     // If stamped then can only be returned
     if (return_area.isPassportInArea(passport_object.get()))
     {
-      std::cout << "Passport has been stamped and is in RETURN area" << std::endl;
-
       // Hide and immobilise passport
       passport_object->setCanBeDragged(false);
       passport_object->setVisible(false);
@@ -307,8 +311,6 @@ void Game::handlePassportDropped() {
     // Not stamped - so cannot be returned
     if (passport_area.isPassportInArea(passport_object.get()))
     {
-      std::cout << "Passport has NOT been stamped and is in PASSPORT area" << std::endl;
-
       // Set the passport to be in the area
       passport_object->setDragPosition(passport_area.getPassportLockPosition());
 
@@ -407,7 +409,7 @@ void Game::createNewRound() {
 
   if (debug_mode)
     std::cout << "Stamp Value: " << passport_object->getPassportStampValue() << std::endl;
-    std::cout << "Stamped Value: " << passport_object->getPassportStamped() << std::endl;
+
 
   // Choose if matching
   passport_data_manager.setPassportMatching(decideIfMatch());
@@ -435,6 +437,8 @@ void Game::createNewRound() {
   // Send data to passport
   passport_object->initPassport(*passport_character_data);
 
+  // Update Trackers
+  progress_counter.updateCount(rounds_correct, rounds_played);
   rounds_played++;
 
 }
