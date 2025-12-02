@@ -41,6 +41,8 @@ set(SOURCE_FILES
         src/Effects/FeedbackFade/FeedbackFade.cpp
         src/UI/ProgressCounter/ProgressCounter.h
         src/UI/ProgressCounter/ProgressCounter.cpp
+        src/UI/Menu/Menu.h
+        src/UI/Menu/Menu.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
 
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use

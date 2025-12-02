@@ -52,7 +52,7 @@ void ProgressCounter::setupText() {
 
    score_text.setFont(FontManager::getInstance().getFont("Passport"));
    score_text.setCharacterSize(ScaleTools::getScaledFont(100, *background_sprite));
-   score_text.setString("0/0");
+   score_text.setString("0/1");
 
    positionText();
 }

@@ -9,20 +9,22 @@
 
 Game::Game(sf::RenderWindow& game_window)
   : window(game_window),
-    game_view(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f))
+    game_view(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f)),
+    main_menu(this)
 {
   srand(time(NULL));
   window.setView(game_view);
-
 }
 
 bool Game::init()
 {
-
   loadFonts();
   loadData();
   loadBackground();
   loadSprites();
+
+  // Load Menu
+  main_menu.init();
 
   // Passport Slots
   setupSlots();
@@ -55,11 +57,15 @@ bool Game::init()
 
 void Game::update(float dt)
 {
+  sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+  sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
+
   // Handle Menu
   if (game_state == GameState::MENU)
   {
-
+    main_menu.handleMouse(mouse_pos_coords);
   }
+
   // Handle Gameplay
   if (game_state == GameState::PLAY)
   {
@@ -68,8 +74,6 @@ void Game::update(float dt)
 
     if (passport_stamp_visible)
     {
-      sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-      sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
       passport_stamp->handleMouseHover(mouse_pos_coords);
     }
 
@@ -80,8 +84,15 @@ void Game::update(float dt)
 
 void Game::render()
 {
+  // Handle menu
+  if (game_state == GameState::MENU)
+  {
+    main_menu.draw(window);
+  }
+
   // Handle Gameplay
-  if (game_state == GameState::PLAY) {
+  if (game_state == GameState::PLAY)
+  {
     window.draw(background_sprite);
     window.draw(desk_sprite);
 
@@ -93,7 +104,6 @@ void Game::render()
     {
       return_area.draw(window);
     }
-
 
     character_object->draw(window, *this);
     passport_object->draw(window, *this);
@@ -122,38 +132,56 @@ void Game::render()
       rect1.setPosition(static_cast<sf::Vector2f>(mouse_pos));
       window.draw(rect1);
     }
-
   }
 }
 
+void Game::quitGame() {
+  window.close();
+}
+
+
+// Events
 void Game::mouseClicked(sf::Event event)
 {
   sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
   sf::Vector2f mouse_pos_coords = window.mapPixelToCoords(mouse_pos);
 
-  if (debug_mode)
-    std::cout << "Passport Can Move?: " << passport_object->getCanBeDragged() << std::endl;
-
-  if (event.mouseButton.button == sf::Mouse::Left)
+  // Handle Menu
+  if (game_state == GameState::MENU)
   {
-    if (passport_object->getPassportBounds().contains(mouse_pos_coords)
-      && passport_object->getCanBeDragged())
+    if (event.mouseButton.button == sf::Mouse::Left)
     {
-      passport_drag = passport_object.get();
-    }
-    if (passport_stamp_visible)
-    {
-      passport_stamp->onMouseClick();
+      main_menu.handleMouseClick();
     }
   }
-  else if (event.mouseButton.button == sf::Mouse::Right)
+
+  // Handle Gameplay
+  if (game_state == GameState::PLAY)
   {
-    if (passport_object->getPassportState() == PassportState::OPEN)
+    if (debug_mode)
+      std::cout << "Passport Can Move?: " << passport_object->getCanBeDragged() << std::endl;
+
+    if (event.mouseButton.button == sf::Mouse::Left)
     {
-      passport_stamp_visible = !passport_stamp->getVisible();
-      passport_stamp->showStampUI(passport_stamp_visible, mouse_pos_coords,
-        game_view.getSize());
-      passport_stamp->setPassport(passport_object.get());
+      if (passport_object->getPassportBounds().contains(mouse_pos_coords)
+        && passport_object->getCanBeDragged())
+      {
+        passport_drag = passport_object.get();
+      }
+      if (passport_stamp_visible)
+      {
+        passport_stamp->onMouseClick();
+      }
+    }
+    else if (event.mouseButton.button == sf::Mouse::Right)
+    {
+      if (passport_object->getPassportState() == PassportState::OPEN)
+      {
+        passport_stamp_visible = !passport_stamp->getVisible();
+        passport_stamp->showStampUI(passport_stamp_visible, mouse_pos_coords,
+          game_view.getSize());
+        passport_stamp->setPassport(passport_object.get());
+      }
     }
   }
 }
@@ -165,21 +193,22 @@ void Game::mouseReleased(sf::Event event)
 
 void Game::keyPressed(sf::Event event)
 {
-  if (event.type == sf::Event::KeyPressed)
+  if (game_state == GameState::PLAY)
   {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && debug_mode)
+    if (event.type == sf::Event::KeyPressed)
     {
-      // Debug choosing a new character on space
-      character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
-      sf::Vector2f pos = ScaleTools::getScaledPosition(passport_spawn_pos_unscaled, background_sprite);
-      passport_object->resetPassport(pos);
-      passport_object->initPassport(*character_data);
-      makePassportSmall();
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && debug_mode)
+      {
+        // Debug choosing a new character on space
+        character_data = std::make_shared<CharacterAssetData>(character_creator.ChooseCharacter());
+        sf::Vector2f pos = ScaleTools::getScaledPosition(passport_spawn_pos_unscaled, background_sprite);
+        passport_object->resetPassport(pos);
+        passport_object->initPassport(*character_data);
+        makePassportSmall();
+      }
     }
   }
-
 }
-
 
 // View
 const sf::View& Game::getDefaultView() {
@@ -187,6 +216,7 @@ const sf::View& Game::getDefaultView() {
 }
 
 // --- PRIVATE ---
+// Loaders
 bool Game::loadBackground() {
   if (!background_texture.loadFromFile("../Data/Images/Background.png")) {
     std::cerr << "Failed to load background texture!" << std::endl;
@@ -257,6 +287,7 @@ void Game::setupSlots() {
   return_area.setAreaPosition(return_area_unscaled_pos, background_sprite);
 }
 
+// Passport Handling
 void Game::handleDragAreas(Passport* passport) {
   if (!passport->getPassportStamped())
   {
@@ -386,6 +417,7 @@ void Game::makePassportSmall() {
   passport_object->setZoom(2.f);
 }
 
+// Rounds
 bool Game::decideIfMatch() const {
     bool match = (static_cast<float>(rand()) / RAND_MAX) < MATCH_PROBABILITY;
 

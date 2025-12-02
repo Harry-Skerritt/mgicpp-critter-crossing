@@ -12,6 +12,7 @@
 #include "Passport/PassportArea/PassportArea.h"
 #include "Passport/PassportStamp/PassportStamp.h"
 #include "UI/ProgressCounter/ProgressCounter.h"
+#include "UI/Menu/Menu.h"
 
 enum class GameState { MENU, PLAY };
 
@@ -33,6 +34,8 @@ class Game
   void setGameState(GameState state) { game_state = state; }
 
   bool getDebug() const { return debug_mode; };
+
+  void quitGame();
 
 private:
     bool loadBackground();
@@ -65,8 +68,11 @@ private:
   // Debug
   bool debug_mode = false;
 
+  // Main Menu
+  Menu main_menu;
+
   // UI
-  int rounds_played = 1;
+  int rounds_played = 0;
   int rounds_correct = 0;
   ProgressCounter progress_counter;
 
@@ -74,7 +80,7 @@ private:
   sf::View game_view;
   float current_zoom = 1.0f;
 
-  GameState game_state = GameState::PLAY; // Todo: Change to Menu and add menu
+  GameState game_state = GameState::MENU; // Todo: Change to Menu and add menu
 
   // Background
   sf::Texture background_texture;
