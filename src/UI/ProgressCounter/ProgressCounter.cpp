@@ -4,8 +4,8 @@
 
 #include "ProgressCounter.h"
 
-#include "../Helpers/ScaleTools/ScaleTools.h"
-#include "../Manager/FontManager/FontManager.h"
+#include "../../Helpers/ScaleTools/ScaleTools.h"
+#include "../../Manager/FontManager/FontManager.h"
 
 #include <iostream>
 

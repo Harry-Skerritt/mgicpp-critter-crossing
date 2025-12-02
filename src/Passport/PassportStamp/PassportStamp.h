@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Manager/FontManager/FontManager.h"
-#include "../Passport.h"
+#include "../Passport/Passport.h"
 
 class Game;
 

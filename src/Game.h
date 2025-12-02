@@ -5,13 +5,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Characters/Character.h"
+#include "Characters/Character/Character.h"
 #include "Characters/CharacterCreator/CharacterCreator.h"
-#include "Effects/FeedbackFade.h"
-#include "Passport/Passport.h"
+#include "Effects/FeedbackFade/FeedbackFade.h"
+#include "Passport/Passport/Passport.h"
 #include "Passport/PassportArea/PassportArea.h"
 #include "Passport/PassportStamp/PassportStamp.h"
-#include "UI/ProgressCounter.h"
+#include "UI/ProgressCounter/ProgressCounter.h"
 
 enum class GameState { MENU, PLAY };
 

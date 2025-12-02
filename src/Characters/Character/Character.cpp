@@ -3,8 +3,8 @@
 //
 
 #include "Character.h"
-#include "../Game.h"
-#include "../Helpers/ScaleTools/ScaleTools.h"
+#include "../../Game.h"
+#include "../../Helpers/ScaleTools/ScaleTools.h"
 
 Character::Character(const sf::Vector2f &position, const sf::Vector2f &size)
 {

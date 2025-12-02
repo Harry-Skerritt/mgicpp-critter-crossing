@@ -23,10 +23,10 @@ set(SOURCE_FILES
         src/Game.h
         src/Characters/CharacterCreator/CharacterCreator.h
         src/Characters/CharacterCreator/CharacterCreator.cpp
-        src/Characters/Character.h
-        src/Characters/Character.cpp
-        src/Passport/Passport.h
-        src/Passport/Passport.cpp
+        src/Characters/Character/Character.h
+        src/Characters/Character/Character.cpp
+        src/Passport/Passport/Passport.h
+        src/Passport/Passport/Passport.cpp
         src/Passport/PassportDataManager/PassportDataManager.h
         src/Passport/PassportDataManager/PassportDataManager.cpp
         src/Passport/PassportStamp/PassportStamp.h
@@ -37,10 +37,10 @@ set(SOURCE_FILES
         src/Manager/FontManager/FontManager.cpp
         src/Helpers/ScaleTools/ScaleTools.h
         src/Helpers/ScaleTools/ScaleTools.cpp
-        src/Effects/FeedbackFade.h
-        src/Effects/FeedbackFade.cpp
-        src/UI/ProgressCounter.h
-        src/UI/ProgressCounter.cpp
+        src/Effects/FeedbackFade/FeedbackFade.h
+        src/Effects/FeedbackFade/FeedbackFade.cpp
+        src/UI/ProgressCounter/ProgressCounter.h
+        src/UI/ProgressCounter/ProgressCounter.cpp
 )  # Sets variable SOURCE_FILES to hold names & locations of files that need to be compiled into the application
 
 add_executable(CritterCrossing ${SOURCE_FILES})  # Names the application and tells compiler which source files to use

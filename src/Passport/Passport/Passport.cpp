@@ -4,9 +4,9 @@
 
 #include "Passport.h"
 
-#include "../Game.h"
-#include "../Manager/FontManager/FontManager.h"
-#include "../Helpers/ScaleTools/ScaleTools.h"
+#include "../../Game.h"
+#include "../../Helpers/ScaleTools/ScaleTools.h"
+#include "../../Manager/FontManager/FontManager.h"
 
 Passport::Passport(const sf::Vector2f &position, const sf::Vector2f &size)
 {

@@ -8,7 +8,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "CharacterCreator/CharacterCreator.h"
+#include "../CharacterCreator/CharacterCreator.h"
 
 class Game;
 class Passport;

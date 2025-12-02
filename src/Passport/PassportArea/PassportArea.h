@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Helpers/ScaleTools/ScaleTools.h"
-#include "../Passport.h"
+#include "../Passport/Passport.h"
 
 enum class SlotType { NONE, PASSPORT, RETURN };
 

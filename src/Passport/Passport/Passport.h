@@ -8,13 +8,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "../Characters/Character.h"
-#include "PassportDataManager/PassportDataManager.h"
+#include "../../Characters/Character/Character.h"
+#include "../PassportDataManager/PassportDataManager.h"
 
-#include <string>
 #include <fstream>
-
-
+#include <string>
 
 enum class PassportState { OPEN, CLOSED };
 
