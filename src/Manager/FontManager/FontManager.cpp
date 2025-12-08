@@ -15,7 +15,9 @@ FontManager &FontManager::getInstance()
 FontManager::FontManager() = default;
 FontManager::~FontManager() = default;
 
-bool FontManager::loadFont(const std::string &font_name, const std::string &file_name, const std::string &resource_location)
+bool FontManager::loadFont(const std::string &font_name,
+                           const std::string &file_name,
+                           const std::string &resource_location)
 {
     std::shared_ptr<sf::Font> font = std::make_shared<sf::Font>();
     std::string font_path = resource_location + file_name;

@@ -40,6 +40,7 @@ class Game
 private:
     bool loadBackground();
     static bool loadFonts();
+    static bool loadSounds();
     bool loadData();
     bool loadSprites();
     void setupSlots();
