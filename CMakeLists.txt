@@ -35,8 +35,6 @@ set(SOURCE_FILES
         src/Passport/PassportArea/PassportArea.cpp
         src/Manager/FontManager/FontManager.h
         src/Manager/FontManager/FontManager.cpp
-        src/Manager/AudioManager/AudioManager.h
-        src/Manager/AudioManager/AudioManager.cpp
         src/Helpers/ScaleTools/ScaleTools.h
         src/Helpers/ScaleTools/ScaleTools.cpp
         src/Effects/FeedbackFade/FeedbackFade.h

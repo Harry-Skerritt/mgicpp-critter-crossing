@@ -6,7 +6,6 @@
 #include <iostream>
 
 #include "Manager/FontManager/FontManager.h"
-#include "Manager/AudioManager/AudioManager.h"
 
 Game::Game(sf::RenderWindow& game_window)
   : window(game_window),
@@ -20,7 +19,6 @@ Game::Game(sf::RenderWindow& game_window)
 bool Game::init()
 {
   loadFonts();
-  loadSounds();
   loadData();
   loadBackground();
   loadSprites();
@@ -153,7 +151,6 @@ void Game::mouseClicked(sf::Event event)
   {
     if (event.mouseButton.button == sf::Mouse::Left)
     {
-      AudioManager::getInstance().playSoundClip("Button-Click");
       main_menu.handleMouseClick();
     }
   }
@@ -173,7 +170,6 @@ void Game::mouseClicked(sf::Event event)
       }
       if (passport_stamp_visible)
       {
-        AudioManager::getInstance().playSoundClip("Passport-Stamped");
         passport_stamp->onMouseClick();
       }
     }
@@ -240,35 +236,6 @@ bool Game::loadFonts() {
 
   if (!FontManager::getInstance().loadFont("Passport", "Passport/Passport-Regular.ttf")) {
     std::cerr << "Failed to load Passport font!" << std::endl;
-    return false;
-  }
-
-  return true;
-}
-
-bool Game::loadSounds() {
-  if (!AudioManager::getInstance().loadSoundClip("Passport-Opened", "passport_opened.ogg")) {
-    std::cerr << "Failed to load Passport open sound!" << std::endl;
-    return false;
-  }
-
-  if (!AudioManager::getInstance().loadSoundClip("Passport-Placed", "passport_placed.ogg")) {
-    std::cerr << "Failed to load Passport placed sound!" << std::endl;
-    return false;
-  }
-
-  if (!AudioManager::getInstance().loadSoundClip("Passport-Stamped", "passport_stamped.ogg")) {
-    std::cerr << "Failed to load Passport stamp sound!" << std::endl;
-    return false;
-  }
-
-  if (!AudioManager::getInstance().loadSoundClip("Button-Click", "button_click.ogg")) {
-    std::cerr << "Failed to load Button Click sound!" << std::endl;
-    return false;
-  }
-
-  if (!AudioManager::getInstance().loadSoundClip("Pop", "pop.ogg")) {
-    std::cerr << "Failed to load pop sound!" << std::endl;
     return false;
   }
 
@@ -367,8 +334,6 @@ void Game::handlePassportDropped() {
       passport_object->setVisible(false);
       return_area.setVisible(false);
 
-      AudioManager::getInstance().playSoundClip("Pop");
-
       validatePassport(passport_object.get());
     }
   }
@@ -384,8 +349,6 @@ void Game::handlePassportDropped() {
       passport_object->openPassport();
       passport_object->setCanBeDragged(false);
       passport_area.setVisible(false);
-
-      AudioManager::getInstance().playSoundClip("Passport-Opened");
     }
   }
 }
@@ -505,8 +468,6 @@ void Game::createNewRound() {
 
   // Send data to passport
   passport_object->initPassport(*passport_character_data);
-
-  AudioManager::getInstance().playSoundClip("Passport-Placed");
 
   // Update Trackers
   progress_counter.updateCount(rounds_correct, rounds_played);
