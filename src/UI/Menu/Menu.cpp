@@ -68,6 +68,10 @@ void Menu::handleMouse(sf::Vector2f mouse_pos) {
 
 void Menu::handleMouseClick() {
    if (play_active) {
+      if (!game->game_reset) {
+         game->resetGame();
+      }
+
       game->setGameState(GameState::PLAY);
    }
 

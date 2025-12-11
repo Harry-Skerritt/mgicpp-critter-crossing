@@ -78,8 +78,13 @@ void Game::update(float dt)
     }
 
     feedback.update(dt);
-  }
 
+    // Lives
+    if (lives_remaining == 0 && feedback.isFeedbackFinished()) {
+      game_state = GameState::MENU;
+      game_reset = false;
+    }
+  }
 }
 
 void Game::render()
@@ -138,6 +143,17 @@ void Game::render()
 void Game::quitGame() {
   window.close();
 }
+
+// Game
+void Game::resetGame() {
+  game_reset = true;
+  rounds_played = 0;
+  lives_remaining = TOTAL_LIVES;
+  rounds_correct = 0;
+  createNewRound();
+  std::cout << "Resetting..." << std::endl;
+}
+
 
 
 // Events
@@ -367,6 +383,7 @@ void Game::validatePassport(Passport *passport) {
     {
       // Incorrect
       feedback.startFeedback(incorrect_feedback);
+      lives_remaining--;
     }
   }
   else
@@ -376,6 +393,7 @@ void Game::validatePassport(Passport *passport) {
     {
       // Incorrect
       feedback.startFeedback(incorrect_feedback);
+      lives_remaining--;
     }
     else if (passport->getPassportStamp() == PassportStampValue::REJECT)
     {
@@ -470,11 +488,10 @@ void Game::createNewRound() {
   passport_object->initPassport(*passport_character_data);
 
   // Update Trackers
-  progress_counter.updateCount(rounds_correct, rounds_played);
+  progress_counter.updateCount(rounds_correct, rounds_played, lives_remaining, TOTAL_LIVES);
   rounds_played++;
 
 }
-
 
 
 

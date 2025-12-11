@@ -19,9 +19,11 @@ void ProgressCounter::init(sf::Vector2f pos, sf::Sprite* background) {
    setupText();
 }
 
-void ProgressCounter::updateCount(int correct, int total) {
+void ProgressCounter::updateCount(int correct, int total, int lives_left, int lives_total) {
    correct_rounds = correct;
    total_rounds = total;
+   lives_remaining = lives_left;
+   total_lives = lives_total;
 
    updateText();
 }
@@ -32,6 +34,8 @@ void ProgressCounter::draw(sf::RenderWindow &window) {
       window.draw(bubble_sprite);
       window.draw(label_text);
       window.draw(score_text);
+      window.draw(lives_label);
+      window.draw(lives_text);
    }
 }
 
@@ -54,6 +58,14 @@ void ProgressCounter::setupText() {
    score_text.setCharacterSize(ScaleTools::getScaledFont(100, *background_sprite));
    score_text.setString("0/1");
 
+   lives_label.setFont(FontManager::getInstance().getFont("Passport"));
+   lives_label.setCharacterSize(ScaleTools::getScaledFont(100, *background_sprite));
+   lives_label.setString("Lives: ");
+
+   lives_text.setFont(FontManager::getInstance().getFont("Passport"));
+   lives_text.setCharacterSize(ScaleTools::getScaledFont(100, *background_sprite));
+   lives_text.setString("3/3");
+
    positionText();
 }
 
@@ -63,10 +75,17 @@ void ProgressCounter::positionText() {
 
    sf::Vector2f score_pos = {502, 32};
    score_text.setPosition(ScaleTools::getScaledPosition(score_pos, bubble_sprite));
+
+   sf::Vector2f lives_pos = {160 , 223};
+   lives_label.setPosition(ScaleTools::getScaledPosition(lives_pos, bubble_sprite));
+
+   sf::Vector2f lives_text_pos = {502, 223};
+   lives_text.setPosition(ScaleTools::getScaledPosition(lives_text_pos, bubble_sprite));
 }
 
 void ProgressCounter::updateText() {
    score_text.setString(std::to_string(correct_rounds) + "/" + std::to_string(total_rounds));
+   lives_text.setString(std::to_string(lives_remaining) + "/" + std::to_string(total_lives));
    positionText();
 }
 

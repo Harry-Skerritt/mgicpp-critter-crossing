@@ -14,7 +14,7 @@ public:
   ~ProgressCounter() = default;
 
   void init(sf::Vector2f pos, sf::Sprite* background);
-  void updateCount(int correct, int total);
+  void updateCount(int correct, int total, int lives_left, int lives_total);
   void draw(sf::RenderWindow& window);
 
   void setVisible(bool visible) { is_visible = visible; }
@@ -36,14 +36,23 @@ private:
 
   sf::Sprite* background_sprite;
 
-  sf::Text label_text;
-  sf::Text score_text;
-
+  // Background
   sf::Texture bubble_texture;
   sf::Sprite bubble_sprite;
 
+  // Score
+  sf::Text label_text;
+  sf::Text score_text;
+
   int total_rounds;
   int correct_rounds;
+
+  // Lives
+  sf::Text lives_label;
+  sf::Text lives_text;
+
+  int total_lives;
+  int lives_remaining;
 
 };
 

@@ -22,6 +22,8 @@ public:
 
   void startFeedback(sf::Color& colour);
 
+  bool isFeedbackFinished() { return feedback_finished; }
+
 private:
   void fade(float t);
 
@@ -39,6 +41,8 @@ private:
   float timer = 0.0f;
 
   sf::Color fade_colour;
+
+  bool feedback_finished = false;
 
 };
 

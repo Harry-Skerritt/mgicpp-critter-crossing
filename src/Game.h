@@ -36,6 +36,7 @@ class Game
   bool getDebug() const { return debug_mode; };
 
   void quitGame();
+  void resetGame();
 
 private:
     bool loadBackground();
@@ -60,9 +61,10 @@ private:
     bool decideIfMatch() const;
 
 
-
 // Vars
 public:
+  // Game State
+  bool game_reset = false;
 
 private:
   // Debug
@@ -71,9 +73,13 @@ private:
   // Main Menu
   Menu main_menu;
 
+
+
   // UI
   int rounds_played = 0;
   int rounds_correct = 0;
+  const int TOTAL_LIVES = 3;
+  int lives_remaining = TOTAL_LIVES;
   ProgressCounter progress_counter;
 
   sf::RenderWindow& window;

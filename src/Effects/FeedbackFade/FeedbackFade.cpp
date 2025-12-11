@@ -29,13 +29,13 @@ void FeedbackFade::init(std::string texture_loc, float fade_in, float fade_out, 
 void FeedbackFade::update(float dt)
 {
     timer += dt;
-
     switch (fade_state)
     {
       case FadeState::NONE:
         break;
 
       case FadeState::FADE_IN:
+        feedback_finished = false;
         if (timer >= fade_in_time)
         {
           feedback_sprite.setColor(fade_colour);
@@ -62,6 +62,7 @@ void FeedbackFade::update(float dt)
         {
           timer = 0.0f;
           fade_state = FadeState::NONE;
+          feedback_finished = true;
         }
         else
         {
@@ -69,7 +70,6 @@ void FeedbackFade::update(float dt)
           fade(t);
         }
         break;
-
     }
 }
 
